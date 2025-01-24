@@ -41,8 +41,7 @@ class TicketModalViewController: UIViewController {
         $0.font = .pretenMedium(16)
         $0.textColor = .grayScale700
         $0.numberOfLines = 2
-        $0.setTextWithLineHeight(text: "처음 아파트 임당을 사용하시는 분들을 위해\n무료 패스권을 제공해요", lineHeight: 22.4)
-        $0.textAlignment = .center
+        $0.setTextWithLineHeight(text: "처음 아파트 임당을 사용하시는 분들을 위해\n무료 패스권을 제공해요", lineHeight: 22.4, textAlignment: .center)
     }
     
     private let descriptionLabel = UILabel().then {
@@ -50,8 +49,7 @@ class TicketModalViewController: UIViewController {
         $0.textColor = .mainOrange500
         $0.backgroundColor = .mainOrange50
         $0.numberOfLines = 2
-        $0.setTextWithLineHeight(text: "무료 패스권 사용시 다른 사람들도\n길동님의 인사이트를 무료 패스권으로 볼 수 있어요", lineHeight: 19.6)
-        $0.textAlignment = .center
+        $0.setTextWithLineHeight(text: "무료 패스권 사용시 다른 사람들도\n길동님의 인사이트를 무료 패스권으로 볼 수 있어요", lineHeight: 19.6, textAlignment: .center)
         
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true

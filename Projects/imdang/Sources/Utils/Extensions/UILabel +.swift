@@ -36,7 +36,7 @@ extension UILabel {
 //    }
     
     /// 피그마 Line height 그대로 넣으면 적용됨
-    func setTextWithLineHeight(text: String?, lineHeight: CGFloat) {
+    func setTextWithLineHeight(text: String?, lineHeight: CGFloat, textAlignment: NSTextAlignment = .left) {
         if let text = text {
             let style = NSMutableParagraphStyle()
             style.maximumLineHeight = lineHeight
@@ -50,6 +50,7 @@ extension UILabel {
             let attrString = NSAttributedString(string: text,
                                                 attributes: attributes)
             self.attributedText = attrString
+            self.textAlignment = textAlignment
         }
     }
 }

@@ -73,19 +73,30 @@ final class InsightDetailEtcFooterView: UICollectionReusableView {
     }
     
     func config(text: String) {
-        descriptionLabel.setTextWithLineHeight(text: text, lineHeight: 22.4)
-        let height = calculateLabelHeight(text: text)
-        descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(4)
-            $0.horizontalEdges.equalToSuperview().inset(20)
-            $0.height.equalTo(height)
-        }
-        
-        separatorView.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(32)
-            $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(8)
-            $0.bottom.equalToSuperview()
+        if text != "" {
+            descriptionLabel.setTextWithLineHeight(text: text, lineHeight: 22.4)
+            let height = calculateLabelHeight(text: text)
+            descriptionLabel.snp.makeConstraints {
+                $0.top.equalTo(titleLabel.snp.bottom).offset(4)
+                $0.horizontalEdges.equalToSuperview().inset(20)
+                $0.height.equalTo(height)
+            }
+            
+            separatorView.snp.makeConstraints {
+                $0.top.equalTo(descriptionLabel.snp.bottom).offset(32)
+                $0.horizontalEdges.equalToSuperview()
+                $0.height.equalTo(8)
+                $0.bottom.equalToSuperview()
+            }
+        } else {
+            titleLabel.removeFromSuperview()
+            
+            separatorView.snp.makeConstraints {
+                $0.top.equalToSuperview().offset(32)
+                $0.horizontalEdges.equalToSuperview()
+                $0.height.equalTo(8)
+                $0.bottom.equalToSuperview()
+            }
         }
     }
 }

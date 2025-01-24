@@ -31,10 +31,14 @@ final class InsightDetailImageCell: UITableViewCell {
         insightImageView.image = UIImage()
     }
     
-    func config(url: String) {
-        guard let url = URL(string: url) else { return }
-        insightImageView.kf.setImage(with: url)
-        insightImageView.contentMode = .scaleAspectFill
+    func config(url: String, image: UIImage?) {
+        if let image = image {
+            insightImageView.image = image
+        } else {
+            guard let url = URL(string: url) else { return }
+            insightImageView.kf.setImage(with: url)
+            insightImageView.contentMode = .scaleAspectFill
+        }
         
         insightImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()

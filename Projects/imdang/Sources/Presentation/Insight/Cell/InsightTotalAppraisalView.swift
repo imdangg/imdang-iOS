@@ -46,6 +46,11 @@ class InsightTotalAppraisalFooterView: UICollectionReusableView {
     
     func config(title: String) {
         customTextView.titleLabel.text = title
+        let attributedString = NSMutableAttributedString(string: title)
+        let range = (title as NSString).range(of: "*")
+        attributedString.addAttribute(.foregroundColor, value: UIColor.red, range: range)
+        
+        customTextView.titleLabel.attributedText = attributedString
     }
     
     func setPlaceHolder(text: String) {

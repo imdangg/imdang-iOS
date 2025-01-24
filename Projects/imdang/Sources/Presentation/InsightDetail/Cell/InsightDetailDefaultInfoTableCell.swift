@@ -205,7 +205,7 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
     }
     
     func config(info: InsightDetail, state: DetailExchangeState) {
-        adressLabel.text = "\(info.adress.toString())\n(\(info.apartmentComplex))"
+        adressLabel.text = "\(info.address.toString())\n(\(info.apartmentComplex.name))"
         dateLabel.text = info.visitAt
         transLabel.text = info.visitMethods.joined(separator: " ")
         accessLabel.text = info.access

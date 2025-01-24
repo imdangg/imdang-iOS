@@ -46,8 +46,9 @@ extension UIViewController {
         self.navigationItem.hidesBackButton = true
     }
     
-    func showInsightAlert(comfrimAction: (() -> Void)? = nil, cancelAction: (() -> Void)? = nil) {
+    func showInsightAlert(text: String, type: AlertType, comfrimAction: (() -> Void)? = nil, cancelAction: (() -> Void)? = nil) {
         let customAlertViewController = InsightAlertViewController()
+        customAlertViewController.config(text: text, type: type)
         customAlertViewController.confirmAction = comfrimAction
         customAlertViewController.cancelAction = cancelAction
         customAlertViewController.modalPresentationStyle = .overFullScreen

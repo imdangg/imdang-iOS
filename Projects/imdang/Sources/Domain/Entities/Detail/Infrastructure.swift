@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct Infrastructure {
-    let transportations: [String]
-    let schoolDistricts: [String]
-    let amenities: [String]
-    let facilities: [String]
-    let surroundings: [String]
-    let landmarks: [String]
-    let unpleasantFacilities: [String]
-    let text: String
+struct Infrastructure: Codable {
+    var transportations: [String]
+    var schoolDistricts: [String]
+    var amenities: [String]
+    var facilities: [String]
+    var surroundings: [String]
+    var landmarks: [String]
+    var unpleasantFacilities: [String]
+    var text: String
     
     func conversionArray() -> [(String, [String])] {
         let allArrays: [(name: String, items: [String])] = [

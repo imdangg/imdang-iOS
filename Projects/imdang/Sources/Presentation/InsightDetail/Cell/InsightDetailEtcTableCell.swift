@@ -99,7 +99,7 @@ final class makeLabelsView: UIView {
             let noneLabel = tag == "해당 없음" || tag == "잘 모르겠어요"
             
             let label = PaddingLabel().then {
-                $0.text = tag
+                $0.text = tag.replacingOccurrences(of: "_", with: " ")
                 $0.font = .pretenSemiBold(14)
                 $0.textColor = noneLabel ? .grayScale500 : .mainOrange500
                 $0.backgroundColor = noneLabel ? .grayScale50 : .mainOrange50

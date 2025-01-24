@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Facility {
-    let familyFacilities: [String]
-    let multipurposeFacilities: [String]
-    let leisureFacilities: [String]
-    let surroundings: [String]
-    let text: String
+struct Facility: Codable {
+    var familyFacilities: [String]
+    var multipurposeFacilities: [String]
+    var leisureFacilities: [String]
+    var surroundings: [String]
+    var text: String
     
     func conversionArray() -> [(String, [String])] {
         let allArrays: [(name: String, items: [String])] = [

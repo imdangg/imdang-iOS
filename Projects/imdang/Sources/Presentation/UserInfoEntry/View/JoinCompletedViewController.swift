@@ -67,7 +67,6 @@ final class JoinCompletedViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        customBackButton.isHidden = false
         navigationViewBottomShadow.isHidden = true
         
         addSubviews()

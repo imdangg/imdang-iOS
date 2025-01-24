@@ -18,8 +18,8 @@ enum DetailExchangeState {
 
 final class InsightDetailViewController: BaseViewController {
 
-    var testDate = InsightDetail.testData
-    
+    private var insight: InsightDetail!
+    private var mainImage: UIImage?
     private var tableView: UITableView!
     private var insightImageUrl = ""
     private var exchangeState: DetailExchangeState
@@ -40,12 +40,14 @@ final class InsightDetailViewController: BaseViewController {
     private let degreeButton = CommonButton(title: "거절", initialButtonType: .whiteBackBorderStyle)
     private let agreeButton = CommonButton(title: "수락", initialButtonType: .enabled)
     private let waitButton = CommonButton(title: "대기중", initialButtonType: .disabled)
-    private let doneButton = CommonButton(title: "교환 완료", initialButtonType: .disabled)
+    private let doneButton = CommonButton(title: "교환 완료", initialButtonType: .disabled).then { $0.applyTopBlur() }
     private let buttonBackView = UIView().then { $0.backgroundColor = .white }
     
-    init(url: String, state: DetailExchangeState) {
+    init(url: String, image: UIImage? = nil,state: DetailExchangeState, insight: InsightDetail) {
         exchangeState = state
         insightImageUrl = url
+        mainImage = image
+        self.insight = insight
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -184,29 +186,29 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailImageCell.self)
-            cell.config(url: insightImageUrl)
+            cell.config(url: insightImageUrl, image: mainImage)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailTitleTableCell.self)
-            cell.config(info: testDate)
+            cell.config(info: insight)
             cell.selectionStyle = .none
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailDefaultInfoTableCell.self)
-            cell.config(info: testDate, state: exchangeState)
+            cell.config(info: insight, state: exchangeState)
             cell.selectionStyle = .none
             return cell
         case 3:
-            etcCell.config(info: testDate.infra.conversionArray(), text: testDate.infra.text)
+            etcCell.config(info: insight.infra.conversionArray(), text: insight.infra.text)
             return etcCell
         case 4:
-            etcCell.config(info: testDate.complexEnvironment.conversionArray(), text: testDate.complexEnvironment.text)
+            etcCell.config(info: insight.complexEnvironment.conversionArray(), text: insight.complexEnvironment.text)
             return etcCell
         case 5:
-            etcCell.config(info: testDate.complexFacility.conversionArray(), text: testDate.complexFacility.text)
+            etcCell.config(info: insight.complexFacility.conversionArray(), text: insight.complexFacility.text)
             return etcCell
         case 6:
-            etcCell.config(info: testDate.favorableNews.conversionArray(), text: testDate.favorableNews.text)
+            etcCell.config(info: insight.favorableNews.conversionArray(), text: insight.favorableNews.text)
             return etcCell
         default:
             return UITableViewCell()
@@ -247,16 +249,16 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
         let footerView = InsightDetailEtcFooterView()
         switch section {
         case 3:
-            footerView.config(text: testDate.infra.text)
+            footerView.config(text: insight.infra.text)
             return footerView
         case 4:
-            footerView.config(text: testDate.complexEnvironment.text)
+            footerView.config(text: insight.complexEnvironment.text)
             return footerView
         case 5:
-            footerView.config(text: testDate.complexFacility.text)
+            footerView.config(text: insight.complexFacility.text)
             return footerView
         case 6:
-            footerView.config(text: testDate.favorableNews.text)
+            footerView.config(text: insight.favorableNews.text)
             footerView.separatorView.isHidden = true
             return footerView
         default:

@@ -11,6 +11,10 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+enum AlertType {
+    case confirmOnly, cancellable, write
+}
+
 class InsightAlertViewController: UIViewController {
     var confirmAction: (() -> Void)?
     var cancelAction: (() -> Void)?
@@ -29,11 +33,9 @@ class InsightAlertViewController: UIViewController {
     }
     
     private let descriptionLabel = UILabel().then {
-        $0.setTextWithLineHeight(text: "해당 없음, 잘 모르겠어요\n선택시 다른 항목들은\n선택이 해제돼요. 괜찮으신가요?", lineHeight: 25.2)
         $0.font = .pretenSemiBold(18)
         $0.textColor = .grayScale900
-        $0.numberOfLines = 3
-        $0.textAlignment = .center
+        $0.numberOfLines = 0
     }
     
     private let cancleButton = UIButton().then {
@@ -55,16 +57,23 @@ class InsightAlertViewController: UIViewController {
         $0.layer.cornerRadius = 8
     }
     
+    private let storegeBoxButton = UIButton().then {
+        $0.setTitle("보관함 확인하기", for: .normal)
+        $0.setTitleColor(.grayScale700, for: .normal)
+        $0.titleLabel?.font = .pretenSemiBold(14)
+        $0.capsulLayer(height: 42)
+        $0.layer.borderColor = UIColor.grayScale100.cgColor
+        $0.layer.borderWidth = 1
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addSubviews()
-        makeConstrints()
         bindActions()
     }
     
     private func addSubviews() {
-        [icon, descriptionLabel, cancleButton, confirmButton].forEach { alertView.addSubview($0) }
+        [icon, descriptionLabel, cancleButton, confirmButton, storegeBoxButton].forEach { alertView.addSubview($0) }
         [dimView, alertView].forEach { view.addSubview($0) }
     }
     
@@ -75,8 +84,6 @@ class InsightAlertViewController: UIViewController {
         
         alertView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.height.equalTo(275)
-            $0.width.equalTo(335)
         }
         
         icon.snp.makeConstraints {
@@ -93,13 +100,6 @@ class InsightAlertViewController: UIViewController {
         cancleButton.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(24)
             $0.leading.equalToSuperview().offset(24)
-            $0.width.equalTo(137.5)
-            $0.height.equalTo(52)
-        }
-        
-        confirmButton.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(24)
-            $0.trailing.equalToSuperview().offset(-24)
             $0.width.equalTo(137.5)
             $0.height.equalTo(52)
         }
@@ -125,5 +125,67 @@ class InsightAlertViewController: UIViewController {
                 self?.confirmAction?()
             })
             .disposed(by: disposeBag)
+        
+        storegeBoxButton.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                self?.dismiss(animated: true, completion: nil)
+                self?.cancelAction?()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func config(text: String, type: AlertType) {
+        addSubviews()
+        makeConstrints()
+        descriptionLabel.setTextWithLineHeight(text: text, lineHeight: 25.2, textAlignment: .center)
+        
+        switch type {
+        case .confirmOnly:
+            confirmButton.setTitle("확인", for: .normal)
+            cancleButton.isHidden = true
+            
+            confirmButton.snp.makeConstraints {
+                $0.top.equalTo(descriptionLabel.snp.bottom).offset(24)
+                $0.bottom.equalToSuperview().inset(24)
+                $0.horizontalEdges.equalToSuperview().inset(24)
+                $0.height.equalTo(52)
+            }
+            
+        case .cancellable:
+            confirmButton.setTitle("네, 괜찮아요", for: .normal)
+            
+            confirmButton.snp.makeConstraints {
+                $0.top.equalTo(descriptionLabel.snp.bottom).offset(24)
+                $0.trailing.equalToSuperview().offset(-24)
+                $0.bottom.equalToSuperview().offset(-24)
+                $0.width.equalTo(137.5)
+                $0.height.equalTo(52)
+            }
+            
+        case .write:
+            confirmButton.setTitle("확인", for: .normal)
+            cancleButton.isHidden = true
+            
+            
+            storegeBoxButton.snp.makeConstraints {
+                $0.top.equalTo(descriptionLabel.snp.bottom).offset(16)
+                $0.centerX.equalToSuperview()
+                $0.width.equalTo(121)
+                $0.height.equalTo(42)
+            }
+            
+            confirmButton.snp.makeConstraints {
+                $0.top.equalTo(storegeBoxButton.snp.bottom).offset(24)
+                $0.bottom.equalToSuperview().inset(24)
+                $0.horizontalEdges.equalToSuperview().inset(24)
+                $0.height.equalTo(52)
+            }
+        }
+    }
+}
+
+extension UIButton {
+    func capsulLayer(height: Int) {
+        self.layer.cornerRadius = Double(height) / 2
     }
 }

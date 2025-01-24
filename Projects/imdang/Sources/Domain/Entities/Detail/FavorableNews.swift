@@ -1,5 +1,5 @@
 //
-//  GoodNews.swift
+//  FavorableNews.swift
 //  imdang
 //
 //  Created by 임대진 on 1/8/25.
@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct GoodNews {
-    let transportations: [String]
-    let developments: [String]
-    let educations: [String]
-    let environments: [String]
-    let cultures: [String]
-    let industries: [String]
-    let policies: [String]
-    let text: String
+struct FavorableNews: Codable {
+    var transportations: [String]
+    var developments: [String]
+    var educations: [String]
+    var environments: [String]
+    var cultures: [String]
+    var industries: [String]
+    var policies: [String]
+    var text: String
     
     func conversionArray() -> [(String, [String])] {
         let allArrays: [(name: String, items: [String])] = [

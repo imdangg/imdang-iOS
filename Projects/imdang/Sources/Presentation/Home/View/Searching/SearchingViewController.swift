@@ -14,6 +14,8 @@ import RxRelay
 
 
 class SearchingViewController: UIViewController {
+    let searchingViewModel = SearchingViewModel()
+    private var disposeBag = DisposeBag()
     private let myInsight = BehaviorRelay<[Insight]>(value: [])
     private let todayInsight = BehaviorRelay<[Insight]>(value: Insight.todayInsight)
     private let topInsight = BehaviorRelay<[Insight]>(value: Insight.topInsight)
@@ -38,6 +40,20 @@ class SearchingViewController: UIViewController {
         super.viewDidLoad()
         
         setupCollectionView()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        searchingViewModel.loadMyInsight()
+            .subscribe { [self] data in
+                if let data = data {
+                    myInsight.accept(data)
+                    collectionView.reloadData()
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     private func setupCollectionView() {
@@ -95,7 +111,7 @@ class SearchingViewController: UIViewController {
         
         let separatorSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(8))
         let separator = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: separatorSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
-        if myInsight.value.count == 0 {
+        if myInsight.value.isEmpty {
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
             
@@ -189,7 +205,7 @@ extension SearchingViewController: UICollectionViewDataSource, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return myInsight.value.isEmpty ? 1 : 3
+        case 1: return myInsight.value.isEmpty ? 1 : myInsight.value.count > 3 ? 3 : myInsight.value.count
         case 2: return todayInsight.value.count
         case 3: return topInsight.value.count
         default: return 0
@@ -197,19 +213,30 @@ extension SearchingViewController: UICollectionViewDataSource, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        var vc = UIViewController()
+        let insightId = myInsight.value[indexPath.row].id
         switch indexPath.section {
         case 1:
-            vc = InsightDetailViewController(url: myInsight.value[indexPath.row].titleImageUrl, state: myInsight.value[indexPath.row].state)
+            
+            searchingViewModel.loadInsightDetail(id: insightId)
+                .subscribe { [self] data in
+                    if let data = data {
+                        let vc = InsightDetailViewController(url: "", state: .done, insight: data)
+                        vc.hidesBottomBarWhenPushed = true
+                        navigationController?.pushViewController(vc, animated: true)
+                    }
+                }
+                .disposed(by: disposeBag)
         case 2:
-            vc = InsightDetailViewController(url: todayInsight.value[indexPath.row].titleImageUrl, state: todayInsight.value[indexPath.row].state)
+            let vc = InsightDetailViewController(url: todayInsight.value[indexPath.row].titleImageUrl, state: todayInsight.value[indexPath.row].state, insight: InsightDetail.testData)
+            vc.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(vc, animated: true)
         case 3:
-            vc = InsightDetailViewController(url: topInsight.value[indexPath.row].titleImageUrl, state: topInsight.value[indexPath.row].state)
+            let vc = InsightDetailViewController(url: topInsight.value[indexPath.row].titleImageUrl, state: topInsight.value[indexPath.row].state, insight: InsightDetail.testData)
+            vc.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(vc, animated: true)
         default:
             break
         }
-        vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -261,7 +288,7 @@ extension SearchingViewController: UICollectionViewDataSource, UICollectionViewD
             bannerImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
             return cell
         case 1:
-            if myInsight.value.count == 0 {
+            if myInsight.value.isEmpty {
                 let cell = collectionView.dequeueReusableCell(forIndexPath: indexPath, cellType: EmptyMyInsightCollectionCell.self)
                 return cell
             } else {

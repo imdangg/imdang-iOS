@@ -14,11 +14,6 @@ enum companyType {
     case google, kakao
 }
 
-struct JoinResponse: Codable {
-    let code: String
-    let message: String
-}
-
 class ServerJoinService {
     static let shared = ServerJoinService()
     
@@ -33,7 +28,7 @@ class ServerJoinService {
             "deviceToken": UserdefaultKey.deviceToken
         ]
         
-        let endpoint = Endpoint<JoinResponse>(
+        let endpoint = Endpoint<BasicResponse>(
             baseURL: .imdangAPI,
             path: "/auth/join",
             method: .put,

@@ -228,7 +228,7 @@ extension StorageBoxViewController: UICollectionViewDataSource, UICollectionView
         case 1:
             let cell = collectionView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightCollectionCell.self)
             let testImage = "https://img1.newsis.com/2023/07/12/NISI20230712_0001313626_web.jpg"
-            let insight = Insight(id: 0, titleName: "초역세권 대단지 아파트 후기", titleImageUrl: testImage, userName: "홍길동", profileImageUrl: "", adress: "강남구 신논현동", likeCount: 20, state: .done)
+            let insight = Insight(id: "0", titleName: "초역세권 대단지 아파트 후기", titleImageUrl: testImage, userName: "홍길동", profileImageUrl: "", adress: "강남구 신논현동", likeCount: 20, state: .done)
             cell.configure(insight: insight, layoutType: .horizontal)
             return cell
         default:
