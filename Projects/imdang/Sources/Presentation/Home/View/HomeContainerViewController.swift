@@ -38,7 +38,7 @@ class HomeContainerViewController: BaseViewController {
     }
     
     private let alramButton = UIButton().then {
-        $0.setImage(ImdangImages.Image(resource: .alarm), for: .normal)
+        $0.setImage(ImdangImages.Image(resource: .alarmEmpty), for: .normal)
     }
     
     private let myPageButton = UIButton().then {
@@ -48,7 +48,7 @@ class HomeContainerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         homeViewModel.loadMyNickname()
-        
+        loadNotiCheck()
         addSubviews()
         configNavigationBarItem()
         makeConstraints()
@@ -62,7 +62,7 @@ class HomeContainerViewController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+       
         serverService.checkTokenExpired()
         presentModal()
         loadCoupon()
@@ -182,6 +182,21 @@ class HomeContainerViewController: BaseViewController {
                 self?.navigationController?.pushViewController(vc, animated: true)
         })
         .disposed(by: disposeBag)
+    }
+      
+    private func loadNotiCheck() {
+        homeViewModel.loadNotificationCheck()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] state in
+                if state {
+                    self?.alramButton.setImage(ImdangImages.Image(resource: .alarm), for: .normal)
+                } else {
+                    self?.alramButton.setImage(ImdangImages.Image(resource: .alarmEmpty), for: .normal)
+                }
+            }, onError: { error in
+                print("Error occurred: \(error)")
+            })
+            .disposed(by: disposeBag)
     }
     
     private func switchToViewController(_ viewController: UIViewController) {

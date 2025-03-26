@@ -34,4 +34,23 @@ final class HomeViewModel {
             }
             .disposed(by: disposeBag)
     }
+
+    
+    func loadNotificationCheck() -> Observable<Bool> {
+        let endpoint = Endpoint<Bool>(
+            baseURL: .imdangAPI,
+            path: "/notifications/unchecked",
+            method: .get,
+            headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)]
+        )
+        
+        return networkManager.request(with: endpoint)
+            .do(onNext: { response in
+                print("Response: \(response)")
+            })
+            .catch { error in
+                print("NotificationCheck request failed with error: \(error)")
+                return Observable.just(false)
+            }
+    }
 }
