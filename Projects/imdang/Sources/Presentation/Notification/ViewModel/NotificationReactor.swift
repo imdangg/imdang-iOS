@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactorKit
+import NetworkKit
 
 struct MockNoti: Equatable {
     let username: String
@@ -27,9 +28,11 @@ enum NotificationType: String, Equatable {
 }
 
 final class NotificationReactor: Reactor {
+    private let networkManager = NetworkManager(session: .default)
 
     struct State {
-        var notifications: [MockNoti] = []
+        var notifications: [ImdangNotification] = [] // original
+        var filterdNotifications: [ImdangNotification] = []
         var selectedNotificationType: NotificationType
     }
 
@@ -40,7 +43,7 @@ final class NotificationReactor: Reactor {
 
     enum Mutation {
         case changeSelectedNotificationType(NotificationType)
-        case setNotifications([MockNoti])
+        case setNotifications([ImdangNotification])
     }
 
     var initialState: State
@@ -48,18 +51,19 @@ final class NotificationReactor: Reactor {
     init() {
         self.initialState = State(selectedNotificationType: .all)
     }
-
+    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .loadNotifications:
-            // Mock
-            let mockNotifications = (1...6).map { index in
-                MockNoti(
-                    username: "User \(index)",
-                    type: index % 3 == 0 ? .request_accept : (index % 2 == 0 ? .request_reject : .response)
-                )
-            }
-            return Observable.just(.setNotifications(mockNotifications))
+            let data = loadNotifications()
+            return data
+                .map { notifications in
+                    print("!!!!!노티 없음")
+                    return notifications ?? []
+                }
+                .map { notifications in
+                    return .setNotifications(notifications)
+                }
             
         case .tapNotificationTypeButton(let notificationType):
             return Observable.just(.changeSelectedNotificationType(notificationType))
@@ -70,11 +74,59 @@ final class NotificationReactor: Reactor {
         var state = state
 
         switch mutation {
+            // headerView 필터링
         case .changeSelectedNotificationType(let notificationType):
+            
+            if notificationType == .all {
+                state.filterdNotifications = state.notifications
+                
+            } else if notificationType == .request {
+                state.filterdNotifications = state.notifications.filter { $0.category == NotificationCategory.accepted.rawValue }
+                
+            } else if notificationType == .response {
+                state.filterdNotifications = state.notifications.filter { $0.category == NotificationCategory.requested.rawValue || $0.category == NotificationCategory.requestedByCoupon.rawValue }
+            }
+            
             state.selectedNotificationType = notificationType
         case .setNotifications(let notifications):
+            if state.selectedNotificationType == .all { //초기값을 위해
+                state.filterdNotifications = notifications
+            }
             state.notifications = notifications
         }
         return state
     }  
+}
+//case requested = "REQUESTED"
+//case accepted = "ACCEPTED"
+//case rejected = "REJECTED"
+//case requestedByCoupon = "REQUESTED_BY_COUPON"
+
+extension NotificationReactor {
+    
+    func loadNotifications() -> Observable<[ImdangNotification]?> {
+        let parameters: [String: Any] = [
+            "pageNumber": 0,
+            "pageSize": 10,
+            "direction": "DESC",
+            "properties": ["createdAt"]
+        ]
+        
+        let endpoint = Endpoint<NotificationResponse>(
+            baseURL: .imdangAPI,
+            path: "/notifications",
+            method: .get,
+            headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)],
+            parameters: parameters
+        )
+        
+        return networkManager.request(with: endpoint)
+            .map { data in
+                return data.toEntitiy()
+            }
+            .catch { error in
+                print("Error: \(error.localizedDescription)")
+                return Observable.just(nil)
+            }
+    }
 }

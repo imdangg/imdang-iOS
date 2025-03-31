@@ -39,8 +39,8 @@ class NotifivationCollectionViewCell: UICollectionViewCell {
         $0.setButtonTitleColor(color: .grayScale700)
     }
     
-    private var notiType: NotiType?
-    var tapAction: ((NotiType) -> Void)?
+    private var imdangNoti: ImdangNotification?
+    var tapAction: ((ImdangNotification) -> Void)?
     
     private let disposeBag = DisposeBag()
     
@@ -88,43 +88,72 @@ class NotifivationCollectionViewCell: UICollectionViewCell {
             $0.bottom.equalToSuperview().inset(16)
         }
     }
+//    enum NotificationCategory: String {
+//        case requested = "REQUESTED"
+//        case accepted = "ACCEPTED"
+//        case rejected = "REJECTED"
+//        case requestedByCoupon = "REQUESTED_BY_COUPON"
+//    }
+
     
-    func configure(type: NotiType, userName: String) {
-        self.notiType = type
+    func configure(notification: ImdangNotification) {
+        let category = notification.category
         
-        switch type {
-        case .request_accept :
+        func formatTimeAgo(from date: Date) -> String {
+            let now = Date()
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.minute, .hour, .day, .month], from: date, to: now)
+            
+            if let minute = components.minute, minute < 1 {
+                return "방금 전"
+            } else if let minute = components.minute, minute < 60 {
+                return "\(minute)분 전"
+            } else if let hour = components.hour, hour < 24 {
+                return "\(hour)시간 전"
+            } else if let day = components.day, day < 30 {
+                return "\(day)일 전"
+            } else if let month = components.month, month < 12 {
+                return "\(month)개월 전"
+            } else {
+                return "오래 전"
+            }
+        }
+        
+        switch category {
+        case NotificationCategory.requestedByCoupon.rawValue, NotificationCategory.requested.rawValue :
             titleLabel.text = "내가 요청한 내역"
             titleLabel.textColor = .darkBlue
             paddingView.backgroundColor = .lightBlue
-            timeLabel.text = "방금 전"
-            scriptLabel.text = "\(userName)님이 인사이트 교환을 수락했어요.\n교환한 인사이트를 보관함에서 확인해보세요."
+            timeLabel.text = formatTimeAgo(from: notification.createdAt)
+            scriptLabel.text = notification.message
             actionButton.setButtonTitle(title: "보관함 확인하기")
-           
-        case .request_reject :
+            
+        case NotificationCategory.rejected.rawValue:
             titleLabel.text = "내가 요청한 내역"
             titleLabel.textColor = .darkBlue
             paddingView.backgroundColor = .lightBlue
-            timeLabel.text = "20초 전"
-            scriptLabel.text = "\(userName)님이 인사이트 교환을 거절했어요."
+            timeLabel.text = formatTimeAgo(from: notification.createdAt)
+            scriptLabel.text = notification.message
             actionButton.setButtonTitle(title: "다시 요청하기")
-          
-        case .response :
+            
+        case NotificationCategory.accepted.rawValue:
             titleLabel.text = "요청 받은 내역"
-            timeLabel.text = "1개월 전"
             titleLabel.textColor = .mainOrange500
             paddingView.backgroundColor = .mainOrange50
-            scriptLabel.text = "\(userName)님이 인사이트 교환을 요청했어요.\n인사이트 확인 후 수락 및 거절을 선택해주세요."
+            timeLabel.text = formatTimeAgo(from: notification.createdAt)
+            scriptLabel.text = notification.message
             actionButton.setButtonTitle(title: "인사이트 확인하기")
-          
+            
+        default:
+            break
         }
     }
     
     private func bind() {
         actionButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                guard let self = self, let type = self.notiType else { return }
-                self.tapAction?(type)
+                guard let self = self, let notification = self.imdangNoti else { return }
+                self.tapAction?(notification)
             })
             .disposed(by: disposeBag)
     }

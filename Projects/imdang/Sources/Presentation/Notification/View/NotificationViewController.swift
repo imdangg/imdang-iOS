@@ -112,42 +112,47 @@ extension NotificationViewController:  UICollectionViewDataSource, UICollectionV
         guard let reactor = self.reactor else { return cell }
         let notifications = reactor.currentState.notifications
         
-        if indexPath.section == 1 || indexPath.section == 2 {
-            let notification = notifications[indexPath.row]
+        if indexPath.section == 1 {
+            let todayNotification = notifications.filter { Calendar.current.isDateInToday($0.createdAt) }
             
-            cell.configure(
-                type: notification.type,
-                userName: notification.username
-            )
-            
-
-//            let testState: [DetailExchangeState] = [.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,.beforeRequest, .afterRequest, .done,]
-
-            
-            let textImage = UIImageView().then {
-                guard let url = URL(string: "https://img1.newsis.com/2023/07/12/NISI20230712_0001313626_web.jpg") else { return }
-                $0.kf.setImage(with: url)
-                $0.contentMode = .scaleAspectFill
+            if let notification = todayNotification[safe: indexPath.row] {
+                cell.configure(notification: notification)
             }
             
-            cell.tapAction = { [weak self] type in
-                guard let self = self else { return }
-                switch type {
-                case .request_accept:
-                    let tab = TabBarController()
-                    tab.selectedIndex = 2
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(tab, animated: true)
-                case .request_reject:
-                    let view2 = InsightDetailViewController(insight: InsightDetail.emptyInsight)
-                    self.navigationController?.pushViewController(view2, animated: true)
-                case .response:
-                    let view3 = InsightDetailViewController(insight: InsightDetail.emptyInsight)
-                    self.navigationController?.pushViewController(view3, animated: true)
-                }
+        } else if indexPath.section == 2 {
+            let otherNotifications = notifications.filter { !Calendar.current.isDateInToday($0.createdAt) }
+            
+            if let notification = otherNotifications[safe: indexPath.row] {
+                cell.configure(notification: notification)
             }
         }
+        
+        cell.tapAction = { [weak self] noti in
+            guard let self = self else { return }
+            let category = noti.category
+            
+            switch category {
+            case NotificationCategory.requestedByCoupon.rawValue, NotificationCategory.requested.rawValue:
+                let tab = TabBarController()
+                tab.selectedIndex = 2
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(tab, animated: true)
+            case NotificationCategory.rejected.rawValue:
+                let view2 = InsightDetailViewController(insight: InsightDetail.emptyInsight)
+                self.navigationController?.pushViewController(view2, animated: true)
+            case NotificationCategory.accepted.rawValue:
+                let view3 = InsightDetailViewController(insight: InsightDetail.emptyInsight)
+                self.navigationController?.pushViewController(view3, animated: true)
+            default:
+                break
+            }
+        }
+            
+        
         return cell
     }
+     
+
+    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard kind == UICollectionView.elementKindSectionHeader else {
