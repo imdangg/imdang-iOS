@@ -125,7 +125,7 @@ class InsightViewController: BaseViewController, View {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(1)
         }
-
+        
         containerView.snp.makeConstraints {
             $0.top.equalTo(underLineView.snp.bottom)
             $0.leading.trailing.equalToSuperview()

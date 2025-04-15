@@ -28,6 +28,8 @@ class WriteInsightEtcViewController: UIViewController, View {
     private var selectedButtonNames: [Int: Set<String>] = [:]
     private var nextButtonView = NextAndBackButton()
     
+    private let loadingView = LoadingView()
+    
     init(info: [InsightSectionInfo], title: String) {
         self.insightSectionInfo = info
         self.categoryName = title
@@ -42,6 +44,8 @@ class WriteInsightEtcViewController: UIViewController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addSubviews()
+        makeConstraints()
         setupCollectionView()
         setupNextButtonView()
     }
@@ -67,6 +71,17 @@ class WriteInsightEtcViewController: UIViewController, View {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview()
+        }
+    }
+    
+    private func addSubviews() {
+        view.addSubview(loadingView)
+    }
+    
+    private func makeConstraints() {
+        
+        loadingView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -103,6 +118,7 @@ class WriteInsightEtcViewController: UIViewController, View {
                 case "단지 시설":
                     owner.reactor?.action.onNext( .tapFacilityInfoConfirm(owner.baseInfo.complexFacility) )
                 case "호재":
+                    owner.loadingView.isLoading = true
                     owner.nextButtonView.isEnable = false
                     owner.reactor?.action.onNext( .tapFavorableNewsInfoConfirm(owner.baseInfo.favorableNews) )
                 default:
@@ -143,6 +159,7 @@ class WriteInsightEtcViewController: UIViewController, View {
                     guard let tabBarController = self.tabBarController else { return }
                     tabBarController.selectedIndex = 2
                 }
+                self.loadingView.isLoading = true
                 self.nextButtonView.isEnable = true
             })
             .disposed(by: disposeBag)
