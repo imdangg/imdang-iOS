@@ -85,7 +85,7 @@ struct InsightDetail: Codable {
             summary: "",
             access: "",
             infra: Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], landmarks: [], unpleasantFacilities: [], text: ""),
-            complexEnvironment: Environment(buildingCondition: [""], security: [""], childrenFacility: [""], seniorFacility: [""], text: ""),
+            complexEnvironment: Environment(buildingCondition: [], security: [], childrenFacility: [], seniorFacility: [], text: ""),
             complexFacility: Facility(familyFacilities: [], multipurposeFacilities: [], leisureFacilities: [], surroundings: [], text: ""),
             favorableNews: FavorableNews(transportations: [], developments: [], educations: [], environments: [], cultures: [], industries: [], policies: [], text: ""),
             exchangeRequestStatus: .null,
