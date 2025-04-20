@@ -38,11 +38,11 @@ public final class APIEventMonitor: EventMonitor {
         📲 Data: \(response.data?.toPrettyPrintedString ?? "")
 
         """)
-        if response.response?.statusCode ?? 0 >= 300, let prettyPrintedData = response.data?.toPrettyPrintedString, !prettyPrintedData.contains("J003") {
-            DispatchQueue.main.async {
-                self.showAlert(code: response.response?.statusCode ?? 0, message: prettyPrintedData)
-            }
-        }
+//        if response.response?.statusCode ?? 0 >= 300, let prettyPrintedData = response.data?.toPrettyPrintedString, !prettyPrintedData.contains("J003") {
+//            DispatchQueue.main.async {
+//                self.showAlert(code: response.response?.statusCode ?? 0, message: prettyPrintedData)
+//            }
+//        }
     }
     
     private func showAlert(code: Int, message: String) {

@@ -13,8 +13,8 @@ import Alamofire
 enum RecommendResult {
     case success
     case failure
-    case recommended
-    case beforeExchange
+//    case recommended
+//    case beforeExchange
 }
 
 struct ExchangeResponse: Codable {
@@ -150,15 +150,6 @@ final class InsightDetailViewModel {
                 return .success
             }
             .catch { error in
-                if let nsError = error as NSError? {
-                    if nsError.domain == "ALREADY_RECOMMENDED" {
-                        return Observable.just(.recommended)
-                    } else if nsError.domain == "EXCHANGE_REQUIRED" {
-                        return Observable.just(.beforeExchange)
-                    } else {
-                        return Observable.just(.failure)
-                    }
-                }
                 return Observable.just(.failure)
             }
     }

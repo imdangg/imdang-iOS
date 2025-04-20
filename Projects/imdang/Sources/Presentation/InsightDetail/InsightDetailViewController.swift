@@ -434,13 +434,14 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
                             switch result {
                             case .success:
                                 cell.likeInsight()
+                                owner.insight.recommended = true
                                 owner.analyticsService.insightLike(isOn: true)
                             case .failure:
-                                break
-                            case .recommended:
-                                owner.showAlert(text: "이미 추천한 인사이트입니다", type: .confirmOnly)
-                            case .beforeExchange:
-                                owner.showAlert(text: "인사이트 추천은 교환 후 가능해요", type: .confirmOnly)
+                                if owner.insight.recommended {
+                                    owner.showAlert(text: "이미 추천한 인사이트입니다", type: .confirmOnly)
+                                } else {
+                                    owner.showAlert(text: "인사이트 추천은 교환 후 가능해요", type: .confirmOnly)
+                                }
                             }
                         }
                         .disposed(by: owner.disposeBag)
