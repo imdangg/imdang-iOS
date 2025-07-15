@@ -15,7 +15,7 @@ class InsightReactor: Reactor {
     let insightService = InsightWriteService()
     
     var detail = InsightDetail.emptyInsight
-    var mainImage: UIImage?
+    var mainImage: [UIImage] = []
     var updateInsightId: String?
     
     struct State {
@@ -30,7 +30,7 @@ class InsightReactor: Reactor {
     enum Action {
         case tapCameraSheet(Bool)
         case tapBackButton
-        case tapBaseInfoConfirm(InsightDetail, UIImage?)
+        case tapBaseInfoConfirm(InsightDetail, [UIImage])
         case tapInfraInfoConfirm(Infrastructure)
         case tapEnvironmentInfoConfirm(Environment)
         //        case selectItems(IndexPath, [String])
@@ -39,7 +39,7 @@ class InsightReactor: Reactor {
     
     enum Mutation {
         case showingCameraSheet(Bool)
-        case updateBaseInfo(InsightDetail, UIImage?)
+        case updateBaseInfo(InsightDetail, [UIImage])
         case updateInfra(Infrastructure)
         case updateEnvironment(Environment)
         case setUploadSuccess(Bool)
@@ -82,10 +82,11 @@ class InsightReactor: Reactor {
                         print("Error: \(error)")
                         return Observable.just(Mutation.setUploadSuccess(false))
                     }
-            } else {
-                print("mainImage not found")
-                return Observable.just(Mutation.setUploadSuccess(false))
-            }
+            
+//            } else {
+//                print("mainImage not found")
+//                return Observable.just(Mutation.setUploadSuccess(false))
+//            }
             
         case .tapBackButton:
             return Observable.just(.backSubview)
