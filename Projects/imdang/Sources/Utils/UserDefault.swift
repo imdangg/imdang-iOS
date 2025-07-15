@@ -50,9 +50,6 @@ enum UserdefaultKey {
     @UserDefault(key: "couponReceived", defaultValue: false)
     static var couponReceived: Bool
     
-    @UserDefault(key: "homeToolTip", defaultValue: false)
-    static var homeToolTip: Bool
-    
     @UserDefault(key: "wirteToolTip", defaultValue: false)
     static var wirteToolTip: Bool
     
@@ -70,7 +67,6 @@ enum UserdefaultKey {
         UserdefaultKey.tokenTimeInterval = Date().timeIntervalSince1970
         UserdefaultKey.dontSeeToday = ""
         UserdefaultKey.couponReceived = false
-        UserdefaultKey.homeToolTip = false
         UserdefaultKey.wirteToolTip = false
         UserdefaultKey.signInType = ""
         

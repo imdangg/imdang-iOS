@@ -55,8 +55,6 @@ extension InsightDetailResponse {
             access: self.access,
             infra: self.infra ?? Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], landmarks: [], unpleasantFacilities: [], text: ""),
             complexEnvironment: self.complexEnvironment ?? Environment(buildingCondition: [""], security: [""], childrenFacility: [""], seniorFacility: [""], text: ""),
-            complexFacility: self.complexFacility ?? Facility(familyFacilities: [], multipurposeFacilities: [], leisureFacilities: [], surroundings: [], text: ""),
-            favorableNews: self.favorableNews ?? FavorableNews(transportations: [], developments: [], educations: [], environments: [], cultures: [], industries: [], policies: [], text: ""),
             exchangeRequestStatus: self.exchangeRequestStatus,
             exchangeRequestId: self.exchangeRequestId,
             recommended: self.recommended ?? false,

@@ -28,7 +28,7 @@ final class JoinCompletedViewController: BaseViewController {
     private let subTitleLabel = UILabel().then {
         $0.font = .pretenMedium(16)
         $0.textColor = .grayScale700
-        $0.setTextWithLineHeight(text: "아파트임당은 이런 분들을 위해\n1:1 임장 인사이트 교환 서비스를 제공해요", lineHeight: 22.4)
+        $0.setTextWithLineHeight(text: "아파트임당은 이런 분들을 위해\n임장 인사이트 가이드라인을 제공해요.", lineHeight: 22.4)
         $0.numberOfLines = 0
         $0.textAlignment = .center
     }

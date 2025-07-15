@@ -92,8 +92,8 @@ class WriteInsightEtcViewController: UIViewController, View {
             $0.bottom.equalToSuperview()
             $0.height.equalTo(96)
         }
-        if categoryName == "호재" {
-            nextButtonView.config(needBack: false, title: "작성완료 및 업로드")
+        if categoryName == "단지 환경" {
+            nextButtonView.config(needBack: true, title: "작성 완료")
             presentTooltip()
         } else {
             nextButtonView.config(needBack: true)
@@ -115,12 +115,6 @@ class WriteInsightEtcViewController: UIViewController, View {
                     owner.reactor?.action.onNext( .tapInfraInfoConfirm(owner.baseInfo.infra) )
                 case "단지 환경":
                     owner.reactor?.action.onNext( .tapEnvironmentInfoConfirm(owner.baseInfo.complexEnvironment) )
-                case "단지 시설":
-                    owner.reactor?.action.onNext( .tapFacilityInfoConfirm(owner.baseInfo.complexFacility) )
-                case "호재":
-                    owner.loadingView.isLoading = true
-                    owner.nextButtonView.isEnable = false
-                    owner.reactor?.action.onNext( .tapFavorableNewsInfoConfirm(owner.baseInfo.favorableNews) )
                 default:
                     break
                 }
@@ -207,12 +201,6 @@ extension WriteInsightEtcViewController: UICollectionViewDelegate, UICollectionV
         case "단지 환경":
             if baseInfo.complexEnvironment.security.isEmpty { break }
             setSectionInfo(arr: baseInfo.complexEnvironment.conversionArray(), cell: cell, collectionView: collectionView, indexPath: indexPath)
-        case "단지 시설":
-            if baseInfo.complexFacility.surroundings.isEmpty { break }
-            setSectionInfo(arr: baseInfo.complexFacility.conversionArray(), cell: cell, collectionView: collectionView, indexPath: indexPath)
-        case "호재":
-            if baseInfo.favorableNews.cultures.isEmpty { break }
-            setSectionInfo(arr: baseInfo.favorableNews.conversionArray(), cell: cell, collectionView: collectionView, indexPath: indexPath)
         default:
             break
         }
@@ -423,10 +411,6 @@ extension WriteInsightEtcViewController {
             footer.customTextView.text = baseInfo.infra.text
         case "단지 환경":
             footer.customTextView.text = baseInfo.complexEnvironment.text
-        case "단지 시설":
-            footer.customTextView.text = baseInfo.complexFacility.text
-        case "호재":
-            footer.customTextView.text = baseInfo.favorableNews.text
         default:
             break
         }
@@ -438,38 +422,18 @@ extension WriteInsightEtcViewController {
 
         let categoryMapping: [String: [String: (inout InsightDetail) -> Void]] = [
             "인프라": [
-                "교통*": { $0.infra.transportations = convertItems },
-                "학군*": { $0.infra.schoolDistricts = convertItems },
-                "생활 편의시설*": { $0.infra.amenities = convertItems },
-                "문화 및 여가시설 (단지외부)*": { $0.infra.facilities = convertItems },
-                "주변환경*": { $0.infra.surroundings = convertItems },
-                "랜드마크*": { $0.infra.landmarks = convertItems },
-                "기피시설*": { $0.infra.unpleasantFacilities = convertItems },
+                "교통": { $0.infra.transportations = convertItems },
+                "학군": { $0.infra.schoolDistricts = convertItems },
+                "생활 편의시설": { $0.infra.amenities = convertItems },
+                "문화 및 여가시설 (단지외부)": { $0.infra.facilities = convertItems },
+                "주변환경": { $0.infra.surroundings = convertItems },
                 "인프라 총평": { $0.infra.text = (convertItems.first ?? "").replacingOccurrences(of: "_", with: " ") }
             ],
             "단지 환경": [
-                "건물*": { $0.complexEnvironment.buildingCondition = convertItems },
-                "안전*": { $0.complexEnvironment.security = convertItems },
-                "어린이 시설*": { $0.complexEnvironment.childrenFacility = convertItems },
-                "경로 시설*": { $0.complexEnvironment.seniorFacility = convertItems },
+                "건물": { $0.complexEnvironment.buildingCondition = convertItems },
+                "안전": { $0.complexEnvironment.security = convertItems },
+                "어린이 시설": { $0.complexEnvironment.childrenFacility = convertItems },
                 "단지 환경 총평": { $0.complexEnvironment.text = (convertItems.first ?? "").replacingOccurrences(of: "_", with: " ") }
-            ],
-            "단지 시설": [
-                "가족*": { $0.complexFacility.familyFacilities = convertItems },
-                "다목적*": { $0.complexFacility.multipurposeFacilities = convertItems },
-                "여가 (단지내부)*": { $0.complexFacility.leisureFacilities = convertItems },
-                "환경*": { $0.complexFacility.surroundings = convertItems },
-                "단지 시설 총평": { $0.complexFacility.text = (convertItems.first ?? "").replacingOccurrences(of: "_", with: " ") }
-            ],
-            "호재": [
-                "교통*": { $0.favorableNews.transportations = convertItems },
-                "개발*": { $0.favorableNews.developments = convertItems },
-                "교육*": { $0.favorableNews.educations = convertItems },
-                "자연환경*": { $0.favorableNews.environments = convertItems },
-                "문화*": { $0.favorableNews.cultures = convertItems },
-                "산업*": { $0.favorableNews.industries = convertItems },
-                "정책*": { $0.favorableNews.policies = convertItems },
-                "호재 총평": { $0.favorableNews.text = (convertItems.first ?? "").replacingOccurrences(of: "_", with: " ") }
             ]
         ]
         

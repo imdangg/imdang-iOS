@@ -27,16 +27,6 @@ final class InsightProgressBar: UIView {
         $0.contentMode = .scaleAspectFit
         $0.tag = 2
     }
-    private var circle4 = UIImageView().then {
-        $0.image = ImdangImages.Image(resource: .grayCircle)
-        $0.contentMode = .scaleAspectFit
-        $0.tag = 3
-    }
-    private var circle5 = UIImageView().then {
-        $0.image = ImdangImages.Image(resource: .grayCircle)
-        $0.contentMode = .scaleAspectFit
-        $0.tag = 4
-    }
     
     private var stackView = UIStackView().then {
         $0.axis = .horizontal
@@ -50,14 +40,6 @@ final class InsightProgressBar: UIView {
     private var stick2 = UIView().then {
         $0.backgroundColor = .grayScale200
         $0.tag = 1
-    }
-    private var stick3 = UIView().then {
-        $0.backgroundColor = .grayScale200
-        $0.tag = 2
-    }
-    private var stick4 = UIView().then {
-        $0.backgroundColor = .grayScale200
-        $0.tag = 3
     }
     
     private var label1 = UILabel().then {
@@ -78,18 +60,6 @@ final class InsightProgressBar: UIView {
         $0.font = .pretenSemiBold(12)
         $0.tag = 2
     }
-    private var label4 = UILabel().then {
-        $0.text = "단지 시설"
-        $0.textColor = .grayScale300
-        $0.font = .pretenSemiBold(12)
-        $0.tag = 3
-    }
-    private var label5 = UILabel().then {
-        $0.text = "호재"
-        $0.textColor = .grayScale300
-        $0.font = .pretenSemiBold(12)
-        $0.tag = 4
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -103,8 +73,8 @@ final class InsightProgressBar: UIView {
     }
     
     private func addSubviews() {
-        [circle1, circle2, circle3, circle4, circle5].forEach { stackView.addArrangedSubview($0) }
-        [stackView, stick1, stick2, stick3, stick4, label1, label2, label3, label4, label5].forEach { addSubview($0) }
+        [circle1, circle2, circle3].forEach { stackView.addArrangedSubview($0) }
+        [stackView, stick1, stick2, label1, label2, label3].forEach { addSubview($0) }
     }
     
     private func makeConstraints() {
@@ -114,7 +84,7 @@ final class InsightProgressBar: UIView {
             $0.bottom.equalToSuperview().offset(-37)
         }
         
-        [circle1, circle2, circle3, circle4, circle5].forEach {
+        [circle1, circle2, circle3].forEach {
             $0.snp.makeConstraints {
                 $0.width.height.equalTo(16)
             }
@@ -129,22 +99,8 @@ final class InsightProgressBar: UIView {
         
         stick2.snp.makeConstraints {
             $0.leading.equalTo(circle2.snp.trailing).offset(4)
-            $0.centerY.equalTo(circle1.snp.centerY)
+            $0.centerY.equalTo(circle2.snp.centerY)
             $0.trailing.equalTo(circle3.snp.leading).offset(-4)
-            $0.height.equalTo(1)
-        }
-        
-        stick3.snp.makeConstraints {
-            $0.leading.equalTo(circle3.snp.trailing).offset(4)
-            $0.centerY.equalTo(circle1.snp.centerY)
-            $0.trailing.equalTo(circle4.snp.leading).offset(-4)
-            $0.height.equalTo(1)
-        }
-        
-        stick4.snp.makeConstraints {
-            $0.leading.equalTo(circle4.snp.trailing).offset(4)
-            $0.centerY.equalTo(circle1.snp.centerY)
-            $0.trailing.equalTo(circle5.snp.leading).offset(-4)
             $0.height.equalTo(1)
         }
         
@@ -163,20 +119,10 @@ final class InsightProgressBar: UIView {
             $0.centerX.equalTo(circle3.snp.centerX)
             $0.centerY.equalTo(label1.snp.centerY)
         }
-        
-        label4.snp.makeConstraints {
-            $0.centerX.equalTo(circle4.snp.centerX)
-            $0.centerY.equalTo(label1.snp.centerY)
-        }
-        
-        label5.snp.makeConstraints {
-            $0.centerY.equalTo(label1.snp.centerY)
-            $0.trailing.equalTo(circle5.snp.trailing)
-        }
     }
     
     func setProgress(index: Int) {
-        [circle1, circle2, circle3, circle4, circle5].forEach {
+        [circle1, circle2, circle3].forEach {
             if index - 1 >= 0 && $0.tag == index - 1 {
                 $0.image = ImdangImages.Image(resource: .progressCheck)
             }
@@ -185,12 +131,12 @@ final class InsightProgressBar: UIView {
                 $0.image = ImdangImages.Image(resource: .progressCircle)
             }
             
-            if index + 1 < 5 && $0.tag == index + 1 {
+            if index + 1 < 3 && $0.tag == index + 1 {
                 $0.image = ImdangImages.Image(resource: .grayCircle)
             }
         }
         
-        [label1, label2, label3, label4, label5].forEach {
+        [label1, label2, label3].forEach {
             if index - 1 >= 0 && $0.tag == index - 1 {
                 $0.textColor = .grayScale200
             }
@@ -199,13 +145,13 @@ final class InsightProgressBar: UIView {
                 $0.textColor = .mainOrange500
             }
             
-            if index + 1 < 5 && $0.tag == index + 1 {
+            if index + 1 < 3 && $0.tag == index + 1 {
                 $0.textColor = .grayScale200
             }
             
         }
         
-        [stick1, stick2, stick3, stick4].forEach { stick in
+        [stick1, stick2].forEach { stick in
             if index - 1 >= 0 && stick.tag == index - 1 {
                 UIView.animate(withDuration: 0.3) {
                     stick.backgroundColor = .mainOrange500

@@ -36,10 +36,10 @@ class StorageBoxEmptyViewController: BaseViewController {
     }
     
     private let label = UILabel().then {
-        $0.font = .pretenSemiBold(18)
+        $0.font = .pretenRegular(18)
         $0.textColor = .grayScale500
         $0.numberOfLines = 0
-        $0.setTextWithLineHeight(text: "작성 혹은 교환한 인사이트가 없어요.\n임장을 다녀온 후 인사이트를\n작성하고 교환해 보세요.", lineHeight: 25.2, textAlignment: .center)
+        $0.setTextWithLineHeight(text: "추천 또는 작성한 인사이트가 없어요.\n양질의 인사이트를 추천하고 관리해보세요", lineHeight: 25.2, textAlignment: .center)
     }
     
     init() {

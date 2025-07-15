@@ -17,7 +17,7 @@ public struct Endpoint<R>: Requestable where R: Decodable {
     public let path: String
     public let method: HTTPMethod
     public let encodingType: EncodingType?
-    public let headers: HTTPHeaders
+    public var headers: HTTPHeaders
     public let parameters: HTTPRequestParameter?
     
     

@@ -17,8 +17,8 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
     
     init() {
         let page1 = OnboardingViewController(title: "가이드로 인사이트 작성하기", description: "가이드라인으로 체계화된 인사이트를\n간편하게 작성할 수 있어요", image: ImdangImages.Image(resource: .guideImage1))
-        let page2 = OnboardingViewController(title: "인사이트 교환하기", description: "양질의 인사이트를 주고받으며\n가치 있는 임장 인사이트를 교환하세요", image: ImdangImages.Image(resource: .guideImage2)).then { $0.showButton() }
-        let page3 = OnboardingViewController(title: "다양한 인사이트 모으기", description: "작성한 인사이트와 교환한 인사이트를\n보관함에서 편리하게 관리하세요", image: ImdangImages.Image(resource: .guideImage3))
+        let page2 = OnboardingViewController(title: "인사이트 교류하기", description: "양질의 인사이트를 주고받으며\n가치 있는 임장 인사이트를 교환하세요", image: ImdangImages.Image(resource: .guideImage2)).then { $0.showButton() }
+        let page3 = OnboardingViewController(title: "다양한 인사이트 모으기", description: "추천한 인사이트와 작성한 인사이트를\n보관함에서 편리하게 관리하세요", image: ImdangImages.Image(resource: .guideImage3))
         
         pages = [page1, page2, page3]
         

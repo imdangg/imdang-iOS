@@ -15,19 +15,12 @@ import Then
 class TextFieldHeaderView: UIView {
     
     let title: String
-    let isEssential: Bool
     let descriptionText: String?
     var limitNumber: Int?
     
     var titleLabel = UILabel().then {
         $0.font = .pretenMedium(14)
         $0.textColor = UIColor.grayScale600
-    }
-    
-    private var EssentialLabel = UILabel().then {
-        $0.font = .pretenMedium(14)
-        $0.text = "*"
-        $0.textColor = UIColor.error
     }
     
     private var signImage = UIImageView()
@@ -44,7 +37,6 @@ class TextFieldHeaderView: UIView {
     
     init(frame: CGRect = .zero, title: String, isEssential: Bool, descriptionText: String? = nil, limitNumber: Int? = nil) {
         self.title = title
-        self.isEssential = isEssential
         self.descriptionText = descriptionText
         self.limitNumber = limitNumber
         super.init(frame: frame)
@@ -63,7 +55,7 @@ class TextFieldHeaderView: UIView {
     }
     
     private func addSubViews() {
-        [titleLabel, EssentialLabel, signImage, descriptionLabel, textNumLabel].forEach { addSubview($0) }
+        [titleLabel, signImage, descriptionLabel, textNumLabel].forEach { addSubview($0) }
     }
     
     private func makeUI() {
@@ -71,20 +63,9 @@ class TextFieldHeaderView: UIView {
             $0.leading.equalToSuperview()
         }
         
-        if isEssential {
-            EssentialLabel.snp.makeConstraints {
-                $0.leading.equalTo(titleLabel.snp.trailing)
-                $0.centerY.equalTo(titleLabel)
-            }
-            signImage.snp.makeConstraints {
-                $0.leading.equalTo(EssentialLabel.snp.trailing).offset(4)
-                $0.centerY.equalTo(titleLabel)
-            }
-        } else {
-            signImage.snp.makeConstraints {
-                $0.leading.equalTo(titleLabel.snp.trailing).offset(6)
-                $0.centerY.equalTo(titleLabel)
-            }
+        signImage.snp.makeConstraints {
+            $0.leading.equalTo(titleLabel.snp.trailing).offset(6)
+            $0.centerY.equalTo(titleLabel)
         }
     
         textNumLabel.snp.makeConstraints {

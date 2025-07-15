@@ -51,11 +51,12 @@ class KakaoLoginService {
         return Observable.create { [self] observer in
             
             let parameters: [String: Any] = [
-                "accessToken": oauthToken.accessToken,
+                "provider" : "KAKAO",
+                "token": oauthToken.accessToken
             ]
-            let endpoint = Endpoint<User>(
+            let endpoint = Endpoint<UserResponse>(
                 baseURL: .imdangAPI,
-                path: "/auth/kakao",
+                path: "/login",
                 method: .post,
                 parameters: parameters
             )
@@ -63,12 +64,11 @@ class KakaoLoginService {
             networkManager.request(with: endpoint)
                 .subscribe(
                     onNext: { entity in
-                        UserdefaultKey.isJoined = entity.joined
-                        UserdefaultKey.couponReceived = entity.couponReceived
-                        UserdefaultKey.accessToken = entity.accessToken
-                        UserdefaultKey.refreshToken = entity.refreshToken
+                        UserdefaultKey.isJoined = entity.user.isJoined
+                        UserdefaultKey.accessToken = entity.user.accessToken
+                        UserdefaultKey.refreshToken = entity.user.refreshToken
                         UserdefaultKey.tokenTimeInterval = Date().timeIntervalSince1970
-                        UserdefaultKey.memberId = entity.memberId
+                        UserdefaultKey.memberId = entity.user.memberId
                         UserdefaultKey.signInType = SignInType.kakao.rawValue
                         observer.onNext(true)
                         observer.onCompleted()

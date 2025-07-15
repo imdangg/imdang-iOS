@@ -14,7 +14,7 @@ class BannerView: UIView {
         $0.textColor = .grayScale900
         $0.font = .pretenSemiBold(16)
         $0.numberOfLines = 2
-        $0.setTextWithLineHeight(text: "아파트임당은\n왜 1:1 교환시스템을 도입했을까요?", lineHeight: 22.4)
+        $0.setTextWithLineHeight(text: "아파트임당은\n왜 인사이트 가이드라인을 제공하나요?", lineHeight: 22.4)
     }
     
     private let imageView = UIImageView().then {

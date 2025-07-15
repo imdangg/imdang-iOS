@@ -8,9 +8,9 @@
 import Foundation
 
 struct InsightEtcInfo {
-    static let infrastructure: [InsightSectionInfo] = [InsightSectionInfo.trafic, InsightSectionInfo.educationInfo, InsightSectionInfo.livingFacility, InsightSectionInfo.culturalAndLeisure, InsightSectionInfo.surroundEnvironment, InsightSectionInfo.landMark, InsightSectionInfo.repellentFacility]
+    static let infrastructure: [InsightSectionInfo] = [InsightSectionInfo.trafic, InsightSectionInfo.educationInfo, InsightSectionInfo.livingFacility, InsightSectionInfo.culturalAndLeisure, InsightSectionInfo.surroundEnvironment]
     
-    static let environment: [InsightSectionInfo] = [InsightSectionInfo.building, InsightSectionInfo.safety, InsightSectionInfo.childrenFacility, InsightSectionInfo.seniorFacility]
+    static let environment: [InsightSectionInfo] = [InsightSectionInfo.building, InsightSectionInfo.safety, InsightSectionInfo.childrenFacility]
     
     static let facility: [InsightSectionInfo] = [InsightSectionInfo.family, InsightSectionInfo.multipurpose, InsightSectionInfo.leisure, InsightSectionInfo.environment]
     

@@ -91,11 +91,6 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
         $0.numberOfLines = 0
     }
     
-    private let descriptionImageView = UIImageView().then {
-        $0.image = ImdangImages.Image(resource: .detailExchangeRequest)
-        $0.contentMode = .scaleAspectFit
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -105,7 +100,6 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        descriptionImageView.image = nil
     }
     
     required init?(coder: NSCoder) {
@@ -113,7 +107,7 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
     }
     
     private func addSubviews() {
-        [addressTitleLabel, addressLabel, naverMapView, dateTitleLabel, dateLabel, transTitleLabel, transLabel, accessTitleLabel, accessLabel, summaryTitleLabel, summaryLabel, descriptionImageView].forEach { contentView.addSubview($0) }
+        [addressTitleLabel, addressLabel, naverMapView, dateTitleLabel, dateLabel, transTitleLabel, transLabel, accessTitleLabel, accessLabel, summaryTitleLabel, summaryLabel].forEach { contentView.addSubview($0) }
     }
     
     private func makeConstraints() {
@@ -209,39 +203,10 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
             setMapCenterAndAddMarker(latitude: latitude, longitude: longitude)
         }
         
-        switch state {
-        case .null:
-            if isMyInsight {
-                descriptionImageView.isHidden = true
-            } else {
-                descriptionImageView.image = ImdangImages.Image(resource: .detailExchangeRequest)
-            }
-        case .pending:
-            if isMyInsight {
-                descriptionImageView.image = ImdangImages.Image(resource: .detailWaiting)
-            } else {
-                descriptionImageView.image = ImdangImages.Image(resource: .detailRequestReply)
-            }
-        default:
-            break
-        }
-        
-        if state == .accepted || state == .null && isMyInsight {
-            contentView.snp.makeConstraints {
-                $0.top.equalToSuperview()
-                $0.horizontalEdges.equalToSuperview()
-                $0.height.equalTo(608 + calculateLabelHeight(text: info.summary))
-            }
-        } else {
-            contentView.snp.remakeConstraints {
-                $0.top.equalToSuperview()
-                $0.horizontalEdges.equalToSuperview()
-                $0.height.equalTo(608 + calculateLabelHeight(text: info.summary) + 312).priority(999)
-            }
-            descriptionImageView.snp.makeConstraints {
-                $0.top.equalTo(summaryLabel.snp.bottom).offset(32)
-                $0.horizontalEdges.equalToSuperview()
-            }
+        contentView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(608 + calculateLabelHeight(text: info.summary))
         }
     }
 }

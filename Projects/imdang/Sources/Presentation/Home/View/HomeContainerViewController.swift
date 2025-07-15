@@ -33,11 +33,11 @@ class HomeContainerViewController: BaseViewController {
         $0.titleLabel?.font = .pretenBold(24)
     }
     
-    private let exchangeButton = UIButton().then {
-        $0.setTitle("교환소", for: .normal)
-        $0.setTitleColor(.grayScale500, for: .normal)
-        $0.titleLabel?.font = .pretenBold(24)
-    }
+//    private let exchangeButton = UIButton().then {
+//        $0.setTitle("교환소", for: .normal)
+//        $0.setTitleColor(.grayScale500, for: .normal)
+//        $0.titleLabel?.font = .pretenBold(24)
+//    }
     
     private let alramButton = UIButton().then {
         $0.setImage(ImdangImages.Image(resource: .alarm), for: .normal)
@@ -56,7 +56,6 @@ class HomeContainerViewController: BaseViewController {
         makeConstraints()
         switchToViewController(searchViewController)
         bindActions()
-        presentTooltip()
         
         navigationViewBottomShadow.isHidden = true
         
@@ -92,16 +91,6 @@ class HomeContainerViewController: BaseViewController {
             }
         }
     }
-                
-    private func presentTooltip() {
-        if !UserdefaultKey.homeToolTip {
-            let toolTipView = ToolTipView(type: .up)
-            view.addSubview(toolTipView)
-            toolTipView.snp.makeConstraints {
-                $0.edges.equalToSuperview()
-            }
-        }
-    }
     
     private func addSubviews() {
         [containerView].forEach { view.addSubview($0) }
@@ -116,7 +105,7 @@ class HomeContainerViewController: BaseViewController {
     }
     
     private func configNavigationBarItem() {
-        [searchButton, exchangeButton].forEach {
+        [searchButton, /*exchangeButton*/].forEach {
             leftNaviItemView.addSubview($0)
         }
         [alramButton, myPageButton].forEach {
@@ -129,11 +118,11 @@ class HomeContainerViewController: BaseViewController {
             $0.height.equalTo(34)
         }
 
-        exchangeButton.snp.makeConstraints {
-            $0.leading.equalTo(searchButton.snp.trailing).offset(24)
-            $0.centerY.equalToSuperview()
-            $0.height.equalTo(34)
-        }
+//        exchangeButton.snp.makeConstraints {
+//            $0.leading.equalTo(searchButton.snp.trailing).offset(24)
+//            $0.centerY.equalToSuperview()
+//            $0.height.equalTo(34)
+//        }
         
         myPageButton.snp.makeConstraints {
             $0.trailing.equalToSuperview()
@@ -155,11 +144,11 @@ class HomeContainerViewController: BaseViewController {
             })
             .disposed(by: disposeBag)
         
-        exchangeButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.changeView(showView: .exchange)
-            })
-            .disposed(by: disposeBag)
+//        exchangeButton.rx.tap
+//            .subscribe(onNext: { [weak self] in
+//                self?.changeView(showView: .exchange)
+//            })
+//            .disposed(by: disposeBag)
         
         myPageButton.rx.tap
             .withLatestFrom(homeTapState)
@@ -206,12 +195,12 @@ class HomeContainerViewController: BaseViewController {
         switch showView {
         case .search:
             switchToViewController(searchViewController)
-            exchangeButton.setTitleColor(.grayScale500, for: .normal)
+//            exchangeButton.setTitleColor(.grayScale500, for: .normal)교
             searchButton.setTitleColor(.grayScale900, for: .normal)
         case .exchange:
             switchToViewController(exchangeViewController)
             searchButton.setTitleColor(.grayScale500, for: .normal)
-            exchangeButton.setTitleColor(.grayScale900, for: .normal)
+//            exchangeButton.setTitleColor(.grayScale900, for: .normal)
         }
     }
 }

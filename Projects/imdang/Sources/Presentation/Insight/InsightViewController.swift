@@ -19,8 +19,8 @@ class InsightViewController: BaseViewController, View {
     var disposeBag = DisposeBag()
 
     private let titleLabel = UILabel().then {
-        $0.text = "인사이트 작성"
-        $0.font = .pretenBold(20)
+        $0.text = "인사이트 작성 및 업로드"
+        $0.font = .pretenSemiBold(18)
         $0.textColor = .grayScale900
     }
     
@@ -32,17 +32,6 @@ class InsightViewController: BaseViewController, View {
     
     private let containerView = UIView().then {
         $0.backgroundColor = .clear
-    }
-    
-    private let scoreLabel = PaddingLabel().then {
-        $0.text = "00%"
-        $0.textColor = .mainOrange500
-        $0.font = .pretenSemiBold(14)
-        $0.backgroundColor = .mainOrange50
-        $0.padding = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-        
-        $0.layer.cornerRadius = 14
-        $0.clipsToBounds = true
     }
 
     private var insightSubView: [UIViewController] = []
@@ -84,18 +73,11 @@ class InsightViewController: BaseViewController, View {
         customBackButton.isHidden = false
         
         leftNaviItemView.addSubview(titleLabel)
-        rightNaviItemView.addSubview(scoreLabel)
         
         titleLabel.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(10)
-        }
-        
-        scoreLabel.snp.makeConstraints {
-            $0.height.equalTo(28)
-            $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview()
         }
         
     }
@@ -164,14 +146,6 @@ class InsightViewController: BaseViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { index in
                 self.showInsightSubViewController(at: index)
-            })
-            .disposed(by: disposeBag)
-        
-        reactor.state
-            .map { $0.isChangeScore }
-            .subscribe(onNext: { score in
-                if score == 0 { self.scoreLabel.text = "00%" }
-                else { self.scoreLabel.text = "\(score)%" }
             })
             .disposed(by: disposeBag)
     }

@@ -18,13 +18,11 @@ final class NextAndBackButton: UIView {
     
     let backButton = UIButton().then {
         $0.setTitle("이전", for: .normal)
-        $0.backgroundColor = .white
+        $0.backgroundColor = .grayScale100
         $0.titleLabel?.font = .pretenSemiBold(16)
-        $0.setTitleColor(.grayScale700, for: .normal)
+        $0.setTitleColor(.grayScale500, for: .normal)
         
         $0.layer.cornerRadius = 8
-        $0.layer.borderWidth = 1
-        $0.layer.borderColor = UIColor.grayScale100.cgColor
     }
     
     let nextButton = UIButton().then {
@@ -67,12 +65,12 @@ final class NextAndBackButton: UIView {
             backButton.snp.makeConstraints {
                 $0.leading.equalToSuperview().offset(20)
                 $0.top.equalTo(backgroundView.snp.top)
-                $0.width.equalTo(80)
+                $0.trailing.equalTo(super.snp.centerX).offset(-5)
                 $0.height.equalTo(56)
             }
             
             nextButton.snp.makeConstraints {
-                $0.leading.equalTo(backButton.snp.trailing).offset(10)
+                $0.leading.equalTo(super.snp.centerX).offset(5)
                 $0.trailing.equalToSuperview().offset(-20)
                 $0.top.equalTo(backgroundView.snp.top)
                 $0.height.equalTo(56)

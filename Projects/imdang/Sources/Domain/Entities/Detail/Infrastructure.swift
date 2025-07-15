@@ -24,7 +24,6 @@ struct Infrastructure: Codable {
             ("생활 편의 시설", amenities),
             ("문화 및 여가시설 (단지외부)", facilities),
             ("주변환경", surroundings),
-            ("랜드마크", landmarks),
             ("기피 시설", unpleasantFacilities)
         ]
         

@@ -10,9 +10,6 @@ import Foundation
 struct User: Codable {
     let accessToken: String
     let refreshToken: String
-    let expiresIn: Int
     let memberId: String
-    let appleRefreshToken: String?
-    var couponReceived: Bool = false
-    let joined: Bool
+    let isJoined: Bool
 }

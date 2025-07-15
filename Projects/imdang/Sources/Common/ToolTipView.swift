@@ -79,15 +79,15 @@ class ToolTipView: UIView {
             }
         } else {
             titleLabel.snp.makeConstraints {
-                $0.bottom.equalTo(triangleReverseView.snp.top)
+                $0.bottom.equalToSuperview().offset(-116)
                 $0.centerX.equalToSuperview()
                 $0.width.equalTo(267)
                 $0.height.equalTo(48)
             }
             
             triangleReverseView.snp.makeConstraints {
-                $0.centerX.equalToSuperview()
-                $0.bottom.equalToSuperview().offset(-116)
+                $0.top.equalTo(titleLabel.snp.bottom)
+                $0.trailing.equalTo(titleLabel.snp.trailing).offset(-20)
             }
         }
     }
@@ -96,7 +96,7 @@ class ToolTipView: UIView {
         dimView.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 if self?.type == .up {
-                    UserdefaultKey.homeToolTip = true
+//                    UserdefaultKey.homeToolTip = true
                 }
                 self?.removeFromSuperview()
             })

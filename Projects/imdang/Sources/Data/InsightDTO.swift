@@ -29,8 +29,6 @@ struct InsightDTO: Codable {
         let amenities: [String]
         let facilities: [String]
         let surroundings: [String]
-        let landmarks: [String]
-        let unpleasantFacilities: [String]
         let text: String
     }
     
@@ -38,31 +36,10 @@ struct InsightDTO: Codable {
         let buildingCondition: String
         let security: String
         let childrenFacility: String
-        let seniorFacility: String
-        let text: String
-    }
-    
-    struct ComplexFacility: Codable {
-        let familyFacilities: [String]
-        let multipurposeFacilities: [String]
-        let leisureFacilities: [String]
-        let surroundings: [String]
-        let text: String
-    }
-    
-    struct FavorableNews: Codable {
-        let transportations: [String]
-        let developments: [String]
-        let educations: [String]
-        let environments: [String]
-        let cultures: [String]
-        let industries: [String]
-        let policies: [String]
         let text: String
     }
     
     var insightId: String? = nil
-    let memberId: String
     let score: Int
     let title: String
     let address: Address
@@ -74,6 +51,4 @@ struct InsightDTO: Codable {
     let access: String
     let infra: Infra
     let complexEnvironment: ComplexEnvironment
-    let complexFacility: ComplexFacility
-    let favorableNews: FavorableNews
 }

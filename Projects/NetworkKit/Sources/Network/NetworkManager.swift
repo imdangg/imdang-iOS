@@ -97,12 +97,17 @@ public final class NetworkManager: Network {
                 return Disposables.create()
             }
             
+            print("""
+            📱 MultipartFormData LOG
+            📱 Json: \(endpoint.jsonData.toPrettyPrintedString ?? "")
+            """)
+            
             let request = self.session.upload(multipartFormData: { multipartFormData in
-                multipartFormData.append(endpoint.jsonData, withName: endpoint.isCreate ? "createInsightCommand" : "updateInsightCommand", mimeType: "application/json")
+                multipartFormData.append(endpoint.jsonData, withName: endpoint.isCreate ? "createInsightRequest" : "updateInsightCommand", mimeType: "application/json")
                 
                 for (index, image) in endpoint.images.enumerated() {
                     if let imageData = image.jpegData(compressionQuality: 0.8) {
-                        multipartFormData.append(imageData, withName: "mainImage", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
+                        multipartFormData.append(imageData, withName: "mainImages", fileName: "img\(index + 1).jpeg", mimeType: "image/jpeg")
                     }
                 }
             }, to: endpoint.makeURL(), method: endpoint.method, headers: endpoint.headers)
@@ -113,7 +118,12 @@ public final class NetworkManager: Network {
                     observer.onNext(true)
                     observer.onCompleted()
                 case .failure(let error):
-                    observer.onError(error)
+                    if (200..<300).contains(response.response?.statusCode ?? 0) {
+                        observer.onNext(true)
+                        observer.onCompleted()
+                    } else {
+                        observer.onError(error)
+                    }
                 }
             }
             

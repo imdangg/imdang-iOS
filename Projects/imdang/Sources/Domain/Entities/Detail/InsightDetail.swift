@@ -56,8 +56,8 @@ struct InsightDetail: Codable {
     
     var infra: Infrastructure
     var complexEnvironment: Environment
-    var complexFacility: Facility
-    var favorableNews: FavorableNews
+//    var complexFacility: Facility
+//    var favorableNews: FavorableNews
     
     var exchangeRequestStatus: DetailExchangeState = .null
     var exchangeRequestId: String? = ""
@@ -86,8 +86,6 @@ struct InsightDetail: Codable {
             access: "",
             infra: Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], landmarks: [], unpleasantFacilities: [], text: ""),
             complexEnvironment: Environment(buildingCondition: [], security: [], childrenFacility: [], seniorFacility: [], text: ""),
-            complexFacility: Facility(familyFacilities: [], multipurposeFacilities: [], leisureFacilities: [], surroundings: [], text: ""),
-            favorableNews: FavorableNews(transportations: [], developments: [], educations: [], environments: [], cultures: [], industries: [], policies: [], text: ""),
             exchangeRequestStatus: .null,
             exchangeRequestId: nil,
             recommended: false,
@@ -105,7 +103,6 @@ struct InsightDetail: Codable {
 extension InsightDetail {
     func toDTO() -> InsightDTO {
         return InsightDTO(
-            memberId: self.memberId,
             score: self.score,
             title: self.title,
             address: InsightDTO.Address(
@@ -130,33 +127,13 @@ extension InsightDetail {
                 amenities: self.infra.amenities,
                 facilities: self.infra.facilities,
                 surroundings: self.infra.surroundings,
-                landmarks: self.infra.landmarks,
-                unpleasantFacilities: self.infra.unpleasantFacilities,
                 text: self.infra.text
             ),
             complexEnvironment: InsightDTO.ComplexEnvironment(
                 buildingCondition: self.complexEnvironment.buildingCondition.first ?? "",
                 security: self.complexEnvironment.security.first ?? "",
                 childrenFacility: self.complexEnvironment.childrenFacility.first ?? "",
-                seniorFacility: self.complexEnvironment.seniorFacility.first ?? "",
                 text: self.complexEnvironment.text
-            ),
-            complexFacility: InsightDTO.ComplexFacility(
-                familyFacilities: self.complexFacility.familyFacilities,
-                multipurposeFacilities: self.complexFacility.multipurposeFacilities,
-                leisureFacilities: self.complexFacility.leisureFacilities,
-                surroundings: self.complexFacility.surroundings,
-                text: self.complexFacility.text
-            ),
-            favorableNews: InsightDTO.FavorableNews(
-                transportations: self.favorableNews.transportations,
-                developments: self.favorableNews.developments,
-                educations: self.favorableNews.educations,
-                environments: self.favorableNews.environments,
-                cultures: self.favorableNews.cultures,
-                industries: self.favorableNews.industries,
-                policies: self.favorableNews.policies,
-                text: self.favorableNews.text
             )
         )
     }

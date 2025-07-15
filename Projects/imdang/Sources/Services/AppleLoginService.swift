@@ -83,11 +83,12 @@ extension AppleLoginService {
         return Observable.create { [self] observer in
             
             let parameters: [String: Any] = [
-                "authorizationCode": authorizationCode
+                "provider" : "GOOGLE",
+                "token": authorizationCode
             ]
             let endpoint = Endpoint<User>(
                 baseURL: .imdangAPI,
-                path: "/auth/apple",
+                path: "/login",
                 method: .post,
                 parameters: parameters
             )
@@ -95,12 +96,11 @@ extension AppleLoginService {
             networkManager.request(with: endpoint)
                 .subscribe(
                     onNext: { response in
-                        UserdefaultKey.isJoined = response.joined
-                        UserdefaultKey.couponReceived = response.couponReceived
+                        UserdefaultKey.isJoined = response.isJoined
                         UserdefaultKey.accessToken = response.accessToken
                         UserdefaultKey.memberId = response.memberId
                         UserdefaultKey.tokenTimeInterval = Date().timeIntervalSince1970
-                        UserdefaultKey.refreshToken = response.appleRefreshToken ?? ""
+                        UserdefaultKey.refreshToken = response.refreshToken
                         UserdefaultKey.signInType = SignInType.apple.rawValue
                         observer.onNext(true)
                         observer.onCompleted()

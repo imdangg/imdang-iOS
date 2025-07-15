@@ -33,13 +33,25 @@ class GoogleLoginService {
                     print("Google sign-in success: \(signInResult?.user.profile?.name ?? "")")
                     
                     if let accessToken = signInResult?.user.accessToken {
-                        let parameters: [String: Any] = [
-                            "accessToken": accessToken.tokenString
-                        ]
+//                        let parameters: [String: Any] = [
+//                            "accessToken": accessToken.tokenString
+//                        ]
+//                        
+//                        let endpoint = Endpoint<User>(
+//                            baseURL: .imdangAPI,
+//                            path: "/auth/google",
+//                            method: .post,
+//                            parameters: parameters
+//                        )
                         
-                        let endpoint = Endpoint<User>(
+                        let parameters: [String: Any] = [
+                            "provider" : "GOOGLE",
+                            "token": accessToken.tokenString
+                        ]
+
+                        let endpoint = Endpoint<UserResponse>(
                             baseURL: .imdangAPI,
-                            path: "/auth/google",
+                            path: "/login",
                             method: .post,
                             parameters: parameters
                         )
@@ -47,12 +59,11 @@ class GoogleLoginService {
                         networkManager.request(with: endpoint)
                             .subscribe(
                                 onNext: { entity in
-                                    UserdefaultKey.isJoined = entity.joined
-                                    UserdefaultKey.couponReceived = entity.couponReceived
-                                    UserdefaultKey.accessToken = entity.accessToken
-                                    UserdefaultKey.refreshToken = entity.refreshToken
+                                    UserdefaultKey.isJoined = entity.user.isJoined
+                                    UserdefaultKey.accessToken = entity.user.accessToken
+                                    UserdefaultKey.refreshToken = entity.user.refreshToken
                                     UserdefaultKey.tokenTimeInterval = Date().timeIntervalSince1970
-                                    UserdefaultKey.memberId = entity.memberId
+                                    UserdefaultKey.memberId = entity.user.memberId
                                     UserdefaultKey.signInType = SignInType.google.rawValue
                                     observer.onNext(true)
                                     observer.onCompleted()
