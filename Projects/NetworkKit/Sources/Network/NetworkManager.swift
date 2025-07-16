@@ -103,18 +103,18 @@ public final class NetworkManager: Network {
             """)
             
             let request = self.session.upload(multipartFormData: { multipartFormData in
-                multipartFormData.append(endpoint.jsonData, withName: endpoint.isCreate ? "createInsightRequest" : "updateInsightCommand", mimeType: "application/json")
+                multipartFormData.append(endpoint.jsonData, withName: endpoint.isCreate ? "createInsightRequest" : "updateInsightRequest", mimeType: "application/json")
                 
                 for (index, image) in endpoint.images.enumerated() {
                     if let imageData = image.jpegData(compressionQuality: 0.8) {
-                        multipartFormData.append(imageData, withName: "mainImages", fileName: "img\(index + 1).jpeg", mimeType: "image/jpeg")
+                        multipartFormData.append(imageData, withName: "mainImages", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
                     }
                 }
             }, to: endpoint.makeURL(), method: endpoint.method, headers: endpoint.headers)
             .validate()
             .responseDecodable(of: E.Response.self) { response in
                 switch response.result {
-                case .success(let data):
+                case .success( _):
                     observer.onNext(true)
                     observer.onCompleted()
                 case .failure(let error):

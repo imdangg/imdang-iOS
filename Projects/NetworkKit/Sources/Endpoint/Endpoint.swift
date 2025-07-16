@@ -59,7 +59,7 @@ public struct MultipartEndpoint<R>: MultipartRequestable where R: Decodable {
         path: String,
         method: HTTPMethod,
         encodingType: EncodingType? = nil,
-        headers: HTTPHeaders = [HTTPHeader(name: "Content-Type", value: "application/json")],
+        headers: HTTPHeaders,
         parameters: HTTPRequestParameter? = nil,
         images: [UIImage],
         jsonData: Data,
