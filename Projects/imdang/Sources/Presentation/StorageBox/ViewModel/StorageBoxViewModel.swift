@@ -23,7 +23,7 @@ final class StorageBoxViewModel {
     private let networkManager = NetworkManager()
     
     // 단지별보기 모달 데이터
-    func loadMyComplexes(address: AddressResponse) -> Observable<[AptComplexByDistrict]?> {
+    func loadMyComplexes(address: AddressData) -> Observable<[AptComplexByDistrict]?> {
         let parameters: [String: Any] = [
             "siDo": address.siDo,
             "siGunGu": address.siGunGu,
@@ -32,7 +32,7 @@ final class StorageBoxViewModel {
         
         let endpoint = Endpoint<[AptComplexByDistrict]>(
             baseURL: .imdangAPI,
-            path: "/my-insights/by-district/apartment-complexes",
+            path: "/insights/bookmarked/apartment-complexes",
             method: .get,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)],
             parameters: parameters
@@ -49,17 +49,17 @@ final class StorageBoxViewModel {
     }
     
     // 보관함 주소 박스 데이터
-    func loadMyDistricts() -> Observable<[AddressResponse]?> {
-        let endpoint = Endpoint<[AddressResponse]>(
+    func loadMyDistricts() -> Observable<[AddressData]?> {
+        let endpoint = Endpoint<AddressResponse>(
             baseURL: .imdangAPI,
-            path: "/my-insights/districts",
+            path: "/insights/bookmarked/districts",
             method: .get,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)]
         )
         
         return networkManager.request(with: endpoint)
-            .map { data in
-                return data.filter { $0.eupMyeonDong != ""}
+            .map { result in
+                return result.data.filter { $0.eupMyeonDong != ""}
             }
             .catch { error in
                 print("Error: \(error.localizedDescription)")
@@ -68,7 +68,7 @@ final class StorageBoxViewModel {
     }
     
     
-    func loadStoregeInsights(address: AddressResponse, pageIndex: Int, apartmentComplexName: String? = nil, onlyMine: Bool = false) -> Observable<[Insight]?> {
+    func loadStoregeInsights(address: AddressData, pageIndex: Int, apartmentComplexName: String? = nil, onlyMine: Bool = false) -> Observable<[Insight]?> {
         var parameters: [String: Any] = [
             "siDo": address.siDo,
             "siGunGu": address.siGunGu,
@@ -85,7 +85,7 @@ final class StorageBoxViewModel {
         
         let endpoint = Endpoint<StorageResponse>(
             baseURL: .imdangAPI,
-            path: "/my-insights",
+            path: "/insights/bookmarked",
             method: .get,
             encodingType: .query,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)],

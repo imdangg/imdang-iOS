@@ -50,11 +50,13 @@ final class InsightDetailTitleTableCell: UITableViewCell {
                 likeButton.customImage.tintColor = .mainOrange500
                 likeButton.customText.textColor = .mainOrange500
                 likeButton.layer.borderColor = UIColor.mainOrange500.cgColor
+                likeButton.customText.text = "추천 \(likeCount + 1)"
             } else {
                 likeButton.backgroundColor = .white
                 likeButton.customImage.tintColor = .grayScale700
                 likeButton.customText.textColor = .grayScale700
                 likeButton.layer.borderColor = UIColor.grayScale100.cgColor
+                likeButton.customText.text = "추천 \(likeCount)"
             }
         }
     }
@@ -119,7 +121,6 @@ final class InsightDetailTitleTableCell: UITableViewCell {
     }
     
     func likeInsight() {
-        likeButton.customText.text = "추천 \(likeCount + 1)"
-        isLike = true
+        isLike.toggle()
     }
 }

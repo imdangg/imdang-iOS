@@ -13,8 +13,6 @@ struct Infrastructure: Codable {
     var amenities: [String]
     var facilities: [String]
     var surroundings: [String]
-    var landmarks: [String]
-    var unpleasantFacilities: [String]
     var text: String
     
     func conversionArray() -> [(String, [String])] {
@@ -23,8 +21,7 @@ struct Infrastructure: Codable {
             ("학군", schoolDistricts),
             ("생활 편의 시설", amenities),
             ("문화 및 여가시설 (단지외부)", facilities),
-            ("주변환경", surroundings),
-            ("기피 시설", unpleasantFacilities)
+            ("주변환경", surroundings)
         ]
         
         return allArrays

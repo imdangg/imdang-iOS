@@ -16,11 +16,11 @@ final class StorageBoxViewController: BaseViewController {
     private var toggleState = false
     private var refreshable: Bool = true
     private var disposeBag = DisposeBag()
-    private var currentaddress: AddressResponse?
+    private var currentaddress: AddressData?
     private var selectedComplex = BehaviorRelay<String?>(value: nil)
     
     private let currentPage = BehaviorRelay<Int>(value: 1)
-    private let addresses = BehaviorRelay<[AddressResponse]>(value: [])
+    private let addresses = BehaviorRelay<[AddressData]>(value: [])
     private let insights = BehaviorRelay<[Insight]>(value: [])
     
     private let analyticsService = AnalyticsService.shared
@@ -233,7 +233,7 @@ final class StorageBoxViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
     
-    private func loadInsightData(address: AddressResponse, aptName: String? = nil) {
+    private func loadInsightData(address: AddressData, aptName: String? = nil) {
         storageBoxViewModel.loadStoregeInsights(address: address, pageIndex: pageIndex, apartmentComplexName: aptName, onlyMine: toggleState)
             .compactMap { $0 }
             .subscribe(with: self) { owner, data in
@@ -247,7 +247,7 @@ final class StorageBoxViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
     
-    private func loadMyComplexes(address: AddressResponse) {
+    private func loadMyComplexes(address: AddressData) {
         storageBoxViewModel.loadMyComplexes(address: address)
             .compactMap { $0 }
             .subscribe(with: self) { owner, data in
@@ -256,7 +256,7 @@ final class StorageBoxViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
 
-    func config(addresses: [AddressResponse]) {
+    func config(addresses: [AddressData]) {
         guard refreshable == true else {
             refreshable = true
             return

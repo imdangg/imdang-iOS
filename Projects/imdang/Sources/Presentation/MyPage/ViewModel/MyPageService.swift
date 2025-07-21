@@ -17,7 +17,7 @@ class MyPageService {
         
         let endpoint = Endpoint<MyPageResponse>(
             baseURL: .imdangAPI,
-            path: "/members/detail",
+            path: "/members/me",
             method: .get,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)]
         )
@@ -36,7 +36,7 @@ class MyPageService {
         
         let endpoint = Endpoint<EmptyResponse>(
             baseURL: .imdangAPI,
-            path: "/members/logout",
+            path: "/logout",
             method: .post,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)]
         )

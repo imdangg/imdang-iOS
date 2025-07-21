@@ -8,10 +8,15 @@
 import Foundation
 
 struct InsightDetailResponse: Codable {
-    var memberId: String = UserdefaultKey.memberId
+    var data: InsightDetailData
+    let error: ImdangError?
+}
+
+struct InsightDetailData: Codable {
+    var memberId: MemberId = MemberId(value: UserdefaultKey.memberId)
     var memberNickname: String
     var score: Int?
-    var mainImage: String?
+    var images: [String]?
     var title: String
     var address: Address
     var apartmentComplex: InsightDTO.ApartmentComplex
@@ -20,17 +25,17 @@ struct InsightDetailResponse: Codable {
     var visitMethods: [String]
     var summary: String
     var access: String
-    
+    var createdByMe: Bool
+
     var infra: Infrastructure?
     var complexEnvironment: Environment?
     var complexFacility: Facility?
     var favorableNews: FavorableNews?
-    
-    var exchangeRequestStatus: DetailExchangeState = .null
+
     var exchangeRequestId: String? = ""
     var recommended: Bool?
     var exchangeRequestCreatedByMe: Bool? = nil
-    var insightId: String
+    var insightId: InsightId
     var accused: Bool?
     var accusedCount: Int?
     var createdAt: String?
@@ -41,30 +46,29 @@ struct InsightDetailResponse: Codable {
 extension InsightDetailResponse {
     func toDetail() -> InsightDetail {
         return InsightDetail(
-            memberId: self.memberId,
-            memberNickname: self.memberNickname,
-            score: self.score ?? 0,
-            mainImage: self.mainImage ?? "",
-            title: self.title,
-            address: self.address,
-            apartmentComplex: self.apartmentComplex,
-            visitAt: self.visitAt,
-            visitTimes: self.visitTimes,
-            visitMethods: self.visitMethods,
-            summary: self.summary,
-            access: self.access,
-            infra: self.infra ?? Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], landmarks: [], unpleasantFacilities: [], text: ""),
-            complexEnvironment: self.complexEnvironment ?? Environment(buildingCondition: [""], security: [""], childrenFacility: [""], seniorFacility: [""], text: ""),
-            exchangeRequestStatus: self.exchangeRequestStatus,
-            exchangeRequestId: self.exchangeRequestId,
-            recommended: self.recommended ?? false,
-            exchangeRequestCreatedByMe: self.exchangeRequestCreatedByMe,
-            insightId: self.insightId,
-            accused: self.accused ?? false,
-            accusedCount: self.accusedCount ?? 0,
-            createdAt: self.createdAt ?? "",
-            viewCount: self.viewCount ?? 0,
-            recommendedCount: self.recommendedCount
+            memberId: self.data.memberId,
+            memberNickname: self.data.memberNickname,
+            images: self.data.images ?? [""],
+            title: self.data.title,
+            address: self.data.address,
+            apartmentComplex: self.data.apartmentComplex,
+            visitAt: self.data.visitAt,
+            visitTimes: self.data.visitTimes,
+            visitMethods: self.data.visitMethods,
+            summary: self.data.summary,
+            access: self.data.access,
+            createdByMe: self.data.createdByMe,
+            infra: self.data.infra ?? Infrastructure(transportations: [""], schoolDistricts: [""], amenities: [""], facilities: [""], surroundings: [""], text: ""),
+            complexEnvironment: self.data.complexEnvironment ?? Environment(buildingCondition: [""], security: [""], childrenFacility: [""], text: ""),
+            exchangeRequestId: self.data.exchangeRequestId,
+            recommended: self.data.recommended ?? false,
+            exchangeRequestCreatedByMe: self.data.exchangeRequestCreatedByMe,
+            insightId: self.data.insightId,
+            accused: self.data.accused ?? false,
+            accusedCount: self.data.accusedCount ?? 0,
+            createdAt: self.data.createdAt ?? "",
+            viewCount: self.data.viewCount ?? 0,
+            recommendedCount: self.data.recommendedCount
         )
     }
 }

@@ -40,7 +40,7 @@ struct InsightDTO: Codable {
     }
     
     var insightId: String? = nil
-    let score: Int
+    let memberId: String
     let title: String
     let address: Address
     let apartmentComplex: ApartmentComplex

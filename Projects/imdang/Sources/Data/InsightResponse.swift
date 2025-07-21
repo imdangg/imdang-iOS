@@ -8,6 +8,16 @@
 import Foundation
 
 struct InsightResponse: Codable {
+    let data: InsightData
+    let error: ImdangError?
+    
+    func toEntitiy() -> [Insight] {
+        return data.content.map {
+            Insight(insightId: $0.insightId.value, titleName: $0.title, mainImageUrl: $0.images?.first ?? "", userName: $0.memberNickname, profileImageUrl: "", adress: $0.address.toShortString(), likeCount: $0.recommendedCount)
+        }
+    }
+}
+struct InsightData: Codable {
     let number: Int
     let content: [InsightContent]
     let pageable: Pageable
@@ -22,17 +32,21 @@ struct InsightResponse: Codable {
     
     func toEntitiy() -> [Insight] {
         return content.map {
-            Insight(insightId: $0.insightId, titleName: $0.title, mainImageUrl: $0.mainImage ?? "", userName: $0.memberNickname, profileImageUrl: "", adress: $0.address.toShortString(), likeCount: $0.recommendedCount)
+            Insight(insightId: $0.insightId.value, titleName: $0.title, mainImageUrl: $0.images?.first ?? "", userName: $0.memberNickname, profileImageUrl: "", adress: $0.address.toShortString(), likeCount: $0.recommendedCount)
         }
     }
 }
 
 struct InsightContent: Codable {
-    let mainImage: String?
+    let images: [String]?
     let memberNickname: String
     let title: String
     let recommendedCount: Int
-    let insightId: String
+    let insightId: InsightId
     let address: Address
     let createdAt: String
+}
+
+struct InsightId: Codable {
+    let value: String
 }

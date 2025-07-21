@@ -60,6 +60,7 @@ class WriteInsightEtcViewController: UIViewController, View {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .grayScale25
+        collectionView.showsVerticalScrollIndicator = false
         
         collectionView.register(header: InsightEtcHeaderView.self)
         collectionView.register(cell: InsightEtcCollectionCell.self)
@@ -140,7 +141,7 @@ class WriteInsightEtcViewController: UIViewController, View {
             .subscribe(onNext: { result in
                 self.showAlert(text: "인사이트 업로드가 완료되었어요.\n작성한 내 인사이트는 보관함에서\n확인할 수 있어요.", type: .moveButton) { [self] in
                     self.analyticsService.insightWrite()
-                    let vc = InsightDetailViewController(insight: reactor.detail, mainImage: reactor.mainImage[0], showEditButton: false)
+                    let vc = InsightDetailViewController(insight: reactor.detail, images: reactor.mainImage, showEditButton: false)
                     self.navigationController?.pushViewController(vc, animated: true)
                     if let firstVC = self.navigationController?.viewControllers.first {
                         self.navigationController?.setViewControllers([firstVC, vc], animated: true)

@@ -14,13 +14,13 @@ final class InsightDetailCategoryTapView: UIView {
     let selectedIndex = BehaviorRelay<Int?>(value: nil)
     let setCurrentIndex = BehaviorRelay<Int?>(value: nil)
     private var disposeBag = DisposeBag()
-    private let buttonTitles = ["기본 정보", "인프라", "단지 환경", "단지 시설", "호재"]
+    private let buttonTitles = ["기본 정보", "인프라", "단지 환경"]
 
     private let buttonStackView = UIStackView().then {
         $0.axis = .horizontal
-        $0.spacing = 16
-        $0.alignment = .fill
-        $0.distribution = .fillProportionally
+        $0.spacing = 24
+        $0.alignment = .center
+        $0.distribution = .fill
     }
 
     private let selectTabUnderLineView = UIView().then {
@@ -94,6 +94,11 @@ final class InsightDetailCategoryTapView: UIView {
             button.addTarget(self, action: #selector(didTapTabButton(_:)), for: .touchUpInside)
             buttonStackView.addArrangedSubview(button)
         }
+        
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        spacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        buttonStackView.addArrangedSubview(spacer)
     }
     
     private func getButton(at index: Int) -> UIButton? {
@@ -107,8 +112,9 @@ final class InsightDetailCategoryTapView: UIView {
     
     private func setupUI(index: Int = 0) {
         for (i, button) in buttonStackView.arrangedSubviews.enumerated() {
-            let btn = button as! UIButton
-            btn.setTitleColor(i == index ? .grayScale900 : .grayScale500, for: .normal)
+            if let btn = button as? UIButton {
+                btn.setTitleColor(i == index ? .grayScale900 : .grayScale500, for: .normal)
+            }
         }
 
         if let button = getButton(at: index) {

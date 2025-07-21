@@ -11,7 +11,6 @@ struct Environment: Codable {
     var buildingCondition: [String]
     var security: [String]
     var childrenFacility: [String]
-    var seniorFacility: [String]
     var text: String
     
     func conversionArray() -> [(String, [String])] {
@@ -32,7 +31,6 @@ extension Environment {
         buildingCondition = try container.decodeStringOrArray(forKey: .buildingCondition)
         security = try container.decodeStringOrArray(forKey: .security)
         childrenFacility = try container.decodeStringOrArray(forKey: .childrenFacility)
-        seniorFacility = try container.decodeStringOrArray(forKey: .seniorFacility)
         text = try container.decode(String.self, forKey: .text)
     }
 }

@@ -181,7 +181,7 @@ extension MyPageViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.configure(title: "서비스 이용 약관")
             } else {
                 cell.selectionStyle = .none
-                cell.configure(title: "버전 정보", version: "현재 버전 1.0.0")
+                cell.configure(title: "버전 정보", version: "현재 버전 1.1.0")
             }
             return cell
         default:

@@ -66,27 +66,19 @@ class InsightReactor: Reactor {
             return Observable.just(.updateInfra(info))
         case .tapEnvironmentInfoConfirm(let info):
             detail.complexEnvironment = info
-            if let image = mainImage {
-                var data = detail.toDTO()
-                data.insightId = updateInsightId
-                print("@!@!@")
-                print(data)
-                print("@!@!@")
-                return insightService.createInsight(dto: data, images: [image])
-                    .map { success in
-                        print("Upload success state updated: \(success)")
-                        self.detail.memberNickname = UserdefaultKey.memberNickname
-                        return Mutation.setUploadSuccess(success)
-                    }
-                    .catch { error in
-                        print("Error: \(error)")
-                        return Observable.just(Mutation.setUploadSuccess(false))
-                    }
+            var data = detail.toDTO()
+            data.insightId = updateInsightId
             
-//            } else {
-//                print("mainImage not found")
-//                return Observable.just(Mutation.setUploadSuccess(false))
-//            }
+            return insightService.createInsight(dto: data, images: mainImage)
+                .map { success in
+                    print("Upload success state updated: \(success)")
+                    self.detail.memberNickname = UserdefaultKey.memberNickname
+                    return Mutation.setUploadSuccess(success)
+                }
+                .catch { error in
+                    print("Error: \(error)")
+                    return Observable.just(Mutation.setUploadSuccess(false))
+                }
             
         case .tapBackButton:
             return Observable.just(.backSubview)

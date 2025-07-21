@@ -8,6 +8,7 @@
 
 import Foundation
 
-public struct InsightIdResponse: Codable {
+struct InsightIdResponse: Codable {
     let insightId: String
 }
+

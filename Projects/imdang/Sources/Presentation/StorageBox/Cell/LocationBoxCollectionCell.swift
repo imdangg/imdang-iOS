@@ -147,7 +147,7 @@ class LocationBoxCollectionCell: UICollectionViewCell {
         }
     }
 
-    func configure(address: AddressResponse) {
+    func configure(address: AddressData) {
         locationnLabel.text = address.toAddress()
         zoneCountLabel.text = "\(address.apartmentComplexCount)개"
         insightCountLabel.text = "\(address.insightCount)개"

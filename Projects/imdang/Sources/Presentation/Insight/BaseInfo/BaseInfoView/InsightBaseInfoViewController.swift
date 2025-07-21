@@ -46,6 +46,7 @@ class InsightBaseInfoViewController: UIViewController, TotalAppraisalFootereView
         $0.register(BaseInfoAddressCell.self, forCellWithReuseIdentifier: BaseInfoAddressCell.identifier)
         $0.register(InsightTotalAppraisalFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: InsightTotalAppraisalFooterView.identifier)
         $0.register(BaseInfoHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: BaseInfoHeaderCell.identifier)
+        $0.showsVerticalScrollIndicator = false
         $0.dataSource = self
         $0.delegate = self
     }
@@ -102,7 +103,7 @@ class InsightBaseInfoViewController: UIViewController, TotalAppraisalFootereView
         checkSectionState
             .subscribe(with: self, onNext: { owner, arr in
                 owner.nextButtonView.nextButtonEnable(value: arr.filter { $0 == .done }.count == 8 ? true : false)
-                owner.nextButtonView.nextButtonEnable(value: true)
+//                owner.nextButtonView.nextButtonEnable(value: true)
             })
             .disposed(by: disposeBag)
 
@@ -284,7 +285,7 @@ extension InsightBaseInfoViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BaseInfoImageCell.identifier, for: indexPath) as! BaseInfoImageCell
             
             
-            if imageDataList.isEmpty, let url = URL(string: baseInfo.mainImage) {
+            if imageDataList.isEmpty, let url = URL(string: baseInfo.images[indexPath.item]) {
                 KingfisherManager.shared.retrieveImage(with: url) { result in
                     switch result {
                     case .success(let value):

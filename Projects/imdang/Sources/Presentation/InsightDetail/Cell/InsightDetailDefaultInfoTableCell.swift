@@ -191,7 +191,7 @@ final class InsightDetailDefaultInfoTableCell: UITableViewCell {
         return ceil(boundingBox.height)
     }
     
-    func config(info: InsightDetail, state: DetailExchangeState, isMyInsight: Bool) {
+    func config(info: InsightDetail, isMyInsight: Bool) {
         address = "\(info.address.toString())"
         addressLabel.text = "\(info.address.toString())\n(\(info.apartmentComplex.name))"
         dateLabel.text = "\(info.visitAt) / \(info.visitTimes.joined(separator: ","))"

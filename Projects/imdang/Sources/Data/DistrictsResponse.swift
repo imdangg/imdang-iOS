@@ -8,6 +8,15 @@
 import Foundation
 
 struct DistrictsResponse: Codable {
+    let data: DistrictsData
+    let error: ImdangError?
+    
+    func toAddresses() -> [DistrictAddress] {
+        return data.content.map { $0 }
+    }
+}
+
+struct DistrictsData: Codable {
     let totalElements: Int
     let totalPages: Int
     let size: Int
@@ -19,10 +28,6 @@ struct DistrictsResponse: Codable {
     let first: Bool
     let last: Bool
     let empty: Bool
-    
-    func toAddresses() -> [DistrictAddress] {
-        return content.map { $0 }
-    }
 }
 
 struct DistrictAddress: Codable {

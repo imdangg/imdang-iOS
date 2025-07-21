@@ -179,7 +179,7 @@ extension AddressListViewController: UITableViewDelegate, UITableViewDataSource 
         } else {
             let fullVC = FullInsightViewController()
             fullVC.hidesBottomBarWhenPushed = true
-            let address = AddressResponse(siDo: "서울", siGunGu: guList[selectedGuIndex], eupMyeonDong: addresses[guList[selectedGuIndex]]![indexPath.row], apartmentComplexCount: 0, insightCount: 0)
+            let address = AddressData(siDo: "서울", siGunGu: guList[selectedGuIndex], eupMyeonDong: addresses[guList[selectedGuIndex]]![indexPath.row], apartmentComplexCount: 0, insightCount: 0)
             fullVC.config(type: .search, title: "서울 \(address.siGunGu) \(address.eupMyeonDong)", address: address, chipViewHidden: true)
             self.navigationController?.pushViewController(fullVC, animated: true)
         }

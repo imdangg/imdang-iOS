@@ -8,6 +8,11 @@
 import Foundation
 
 struct AddressResponse: Codable {
+    var data: [AddressData]
+    let error: ImdangError?
+}
+
+struct AddressData: Codable {
     var siDo: String
     var siGunGu: String
     var eupMyeonDong: String

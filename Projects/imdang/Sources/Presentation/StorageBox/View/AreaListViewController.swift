@@ -13,7 +13,7 @@ import RxCocoa
 class AreaListViewController: BaseViewController {
     var setIndex : ((Int?) -> Void)?
     private var tableView: UITableView!
-    private var addresses: [AddressResponse]!
+    private var addresses: [AddressData]!
     private var selectedIndex: Int?
     private let disposeBag = DisposeBag()
     
@@ -96,7 +96,7 @@ class AreaListViewController: BaseViewController {
             .disposed(by: disposeBag)
     }
     
-    func config(addresses: [AddressResponse]) {
+    func config(addresses: [AddressData]) {
         self.addresses = addresses
     }
 }

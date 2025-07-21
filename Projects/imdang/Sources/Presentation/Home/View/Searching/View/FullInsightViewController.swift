@@ -18,7 +18,7 @@ enum FullInsightType: String {
 
 class FullInsightViewController: BaseViewController {
     private var pageIndex = 0
-    private var address: AddressResponse?
+    private var address: AddressData?
     private var tableView: UITableView!
     private var chipViewHidden: Bool = false
     private var myInsights: [Insight]?
@@ -119,7 +119,7 @@ class FullInsightViewController: BaseViewController {
         }
     }
     
-    func config(type: FullInsightType, title: String, address: AddressResponse? = nil, myInsights: [Insight]? = nil, chipViewHidden: Bool = false, chipItems: [String]? = nil) {
+    func config(type: FullInsightType, title: String, address: AddressData? = nil, myInsights: [Insight]? = nil, chipViewHidden: Bool = false, chipItems: [String]? = nil) {
         insightType = type
         titleLabel.text = title
         countLabel.text = "\(insights.value.count)개"

@@ -10,7 +10,7 @@ import UIKit
 struct Insight: Equatable {
     let insightId: String
     let titleName: String
-    let mainImageUrl: String
+    let mainImageUrl: String?
     let userName: String
     let profileImageUrl: String
     let adress: String

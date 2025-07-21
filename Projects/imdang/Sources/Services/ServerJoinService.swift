@@ -34,7 +34,7 @@ class ServerJoinService {
         
         let endpoint = Endpoint<BasicResponse>(
             baseURL: .imdangAPI,
-            path: "/auth/join",
+            path: "/member/join",
             method: .put,
             headers: [.contentType("application/json"), .authorization(bearerToken: UserdefaultKey.accessToken)],
             parameters: parameters
@@ -76,33 +76,33 @@ class ServerJoinService {
     }
     
     func checkTokenExpired(splash: Bool = false) {
-        if splash && UserdefaultKey.isSiginedIn == true {
-            tokenReissue()
-                .subscribe { result in
-                    print(result ? "토근 갱신 완료" : "토근 갱신 실패")
-                    if result == false {
-                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(SigninViewController(), animated: true)
-                    }
-                }
-                .disposed(by: disposeBag)
-        } else {
-            guard let savedTime = UserdefaultKey.tokenTimeInterval else { return }
-            let expirationTime: TimeInterval = 18000
-            let currentTime = Date().timeIntervalSince1970
-            
-            if (currentTime - savedTime) >= expirationTime {
-                tokenReissue()
-                    .subscribe { result in
-                        print(result ? "토근 갱신 완료" : "토근 갱신 실패")
-                        if result == false {
-                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(SigninViewController(), animated: true)
-                        }
-                    }
-                    .disposed(by: disposeBag)
-            } else {
-                print("토큰 만료 \((savedTime + expirationTime) - currentTime)초전")
-            }
-        }
+//        if splash && UserdefaultKey.isSiginedIn == true {
+//            tokenReissue()
+//                .subscribe { result in
+//                    print(result ? "토근 갱신 완료" : "토근 갱신 실패")
+//                    if result == false {
+//                        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(SigninViewController(), animated: true)
+//                    }
+//                }
+//                .disposed(by: disposeBag)
+//        } else {
+//            guard let savedTime = UserdefaultKey.tokenTimeInterval else { return }
+//            let expirationTime: TimeInterval = 18000
+//            let currentTime = Date().timeIntervalSince1970
+//            
+//            if (currentTime - savedTime) >= expirationTime {
+//                tokenReissue()
+//                    .subscribe { result in
+//                        print(result ? "토근 갱신 완료" : "토근 갱신 실패")
+//                        if result == false {
+//                            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootView(SigninViewController(), animated: true)
+//                        }
+//                    }
+//                    .disposed(by: disposeBag)
+//            } else {
+//                print("토큰 만료 \((savedTime + expirationTime) - currentTime)초전")
+//            }
+//        }
     }
     
     private func tokenReissue() -> Observable<Bool> {
@@ -113,7 +113,7 @@ class ServerJoinService {
         
         let endpoint = Endpoint<TokenResponse>(
             baseURL: .imdangAPI,
-            path: "/auth/reissue",
+            path: "/reissue",
             method: .post,
             headers: [.contentType("application/json")],
             parameters: parameters
@@ -122,8 +122,8 @@ class ServerJoinService {
         return networkManager.requestOptional(with: endpoint)
             .map { result in
                 if let result = result {
-                    UserdefaultKey.accessToken = result.accessToken
-                    UserdefaultKey.refreshToken = result.refreshToken
+                    UserdefaultKey.accessToken = result.data.accessToken
+                    UserdefaultKey.refreshToken = result.data.refreshToken
                     UserdefaultKey.tokenTimeInterval = Date().timeIntervalSince1970
                 }
                 return true

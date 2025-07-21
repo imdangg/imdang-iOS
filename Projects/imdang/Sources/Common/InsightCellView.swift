@@ -175,7 +175,7 @@ final class InsightCellView: UIView {
     
     func configure(insight: Insight, layoutType: DirectionType) {
         self.directionType = layoutType
-        if let url = URL(string: insight.mainImageUrl) {
+        if let imageUrl = insight.mainImageUrl, let url = URL(string: imageUrl) {
             titleImageView.kf.setImage(with: url)
         } else {
             titleImageView.image = UIImage()

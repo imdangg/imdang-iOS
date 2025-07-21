@@ -17,7 +17,7 @@ final class SearchingViewModel {
     private let networkManager = NetworkManager()
     
     func loadMyvisited() -> Observable<[String]?> {
-        let endpoint = Endpoint<[ApartmentComplexResponse]>(
+        let endpoint = Endpoint<ApartmentComplexResponse>(
             baseURL: .imdangAPI,
             path: "/insights/created-by-me/apartment-complexes",
             method: .get,
@@ -25,8 +25,8 @@ final class SearchingViewModel {
         )
         
         return networkManager.request(with: endpoint)
-            .map { data in
-                return data.map { $0.name }
+            .map { result in
+                return result.data.map { $0.name }
             }
             .catch { error in
                 print("Error: \(error.localizedDescription)")
@@ -54,7 +54,7 @@ final class SearchingViewModel {
         
         return networkManager.request(with: endpoint)
             .map { data in
-                self.totalElements = data.totalElements
+                self.totalElements = data.data.totalElements
                 return data.toEntitiy()
             }
             .catch { error in
@@ -63,7 +63,7 @@ final class SearchingViewModel {
             }
     }
     
-    func loadInsights(page: Int, type: FullInsightType, address: AddressResponse? = nil) -> Observable<[Insight]?> {
+    func loadInsights(page: Int, type: FullInsightType, address: AddressData? = nil) -> Observable<[Insight]?> {
         let parameters: [String: Any] = [
             "pageNumber": 0,
             "pageSize": 10 * (page + 1),
@@ -85,7 +85,7 @@ final class SearchingViewModel {
             
             return networkManager.request(with: endpoint)
                 .map { data in
-                    self.totalElements = data.totalElements
+                    self.totalElements = data.data.totalElements
                     return data.toEntitiy()
                 }
                 .catch { error in
@@ -114,7 +114,7 @@ final class SearchingViewModel {
                 
                 return networkManager.request(with: endpoint)
                     .map { data in
-                        self.totalElements = data.totalElements
+                        self.totalElements = data.data.totalElements
                         return data.toEntitiy()
                     }
                     .catch { error in

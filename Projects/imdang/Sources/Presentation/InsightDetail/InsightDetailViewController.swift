@@ -14,14 +14,12 @@ import RxRelay
 final class InsightDetailViewController: BaseViewController {
 
     private var insight: InsightDetail!
-    private var mainImage: UIImage?
+    private var images: [UIImage]?
     private var tableView: UITableView!
     private var showEditButton: Bool
-    private var exchangeState: DetailExchangeState
     private var disposeBag = DisposeBag()
     private var myInsights: [Insight]?
     private var coupon: CouponsResponse?
-    private let couponService = CouponService.shared
     private let analyticsService = AnalyticsService.shared
     private let kakaoShareService = KakaoShareService()
     private let insightDetailViewModel = InsightDetailViewModel()
@@ -56,14 +54,13 @@ final class InsightDetailViewController: BaseViewController {
     private var isMine = false
     
     
-    init(insight: InsightDetail, mainImage: UIImage? = nil, showEditButton: Bool = true) {
-        exchangeState = insight.exchangeRequestStatus
+    init(insight: InsightDetail, images: [UIImage]? = nil, showEditButton: Bool = true) {
         self.insight = insight
-        self.mainImage = mainImage
+        self.images = images
         self.showEditButton = showEditButton
         self.accused.accept(insight.accused)
+//        self.isMine = insight.crea
         super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleModalDismiss), name: .detailModalDidDismiss, object: nil)
     }
     
     deinit {
@@ -84,7 +81,6 @@ final class InsightDetailViewController: BaseViewController {
         addSubviews()
         makeConstraints()
         bindActions()
-        loadData()
         
         view.addSubview(categoryTapView)
         categoryTapView.snp.makeConstraints {
@@ -97,15 +93,6 @@ final class InsightDetailViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         AnalyticsService().screenEvent(ScreenName: .insightDetail)
-    }
-    
-    @objc private func handleModalDismiss() {
-        self.navigationController?.popToRootViewController(animated: true)
-        self.navigationController?.viewControllers.forEach {
-            if let homeVC = $0 as? HomeContainerViewController {
-                homeVC.changeView(showView: .exchange)
-            }
-        }
     }
     
     private func setNavigationItem() {
@@ -171,6 +158,7 @@ final class InsightDetailViewController: BaseViewController {
     }
     
     private func showButton() {
+        // MARK: TODO
         if isMine {
             buttonBackView.isHidden = false
             editButton.isHidden = false
@@ -181,7 +169,7 @@ final class InsightDetailViewController: BaseViewController {
     }
     
     private func reloadInsight() {
-        insightDetailViewModel.loadInsightDetail(id: self.insight.insightId)
+        insightDetailViewModel.loadInsightDetail(id: self.insight.insightId.value)
             .subscribe { [self] data in
                 if let data = data {
                     self.insight = data
@@ -198,8 +186,7 @@ final class InsightDetailViewController: BaseViewController {
                 let vc = InsightViewController()
                 let reactor = InsightReactor()
                 reactor.detail = owner.insight
-                reactor.detail.score = 0
-                reactor.updateInsightId = owner.insight.insightId
+                reactor.updateInsightId = owner.insight.insightId.value
                 vc.reactor = reactor
                 owner.navigationController?.pushViewController(vc, animated: true)
             })
@@ -210,7 +197,7 @@ final class InsightDetailViewController: BaseViewController {
                 if !owner.accused.value {
                     owner.showReportAlert(title: "이 인사이트를 신고할까요?", description: "허위, 과다 신고시 불이익이\n발생할 수 있어요", type: .cancellable, comfrimAction: {
                         
-                        owner.insightDetailViewModel.accueInsight(insightId: owner.insight.insightId)
+                        owner.insightDetailViewModel.accueInsight(insightId: owner.insight.insightId.value)
                             .subscribe(with: self) { owner, result in
                                 if result {
                                     owner.accused.accept(true)
@@ -227,7 +214,7 @@ final class InsightDetailViewController: BaseViewController {
         
         shareButton.rx.tap
             .subscribe(with: self, onNext: { owner, _ in
-                owner.kakaoShareService.insightKakaoShare(title: owner.insight.title, insightId: owner.insight.insightId, imageUrl: owner.insight.mainImage) { linkType in
+                owner.kakaoShareService.insightKakaoShare(title: owner.insight.title, insightId: owner.insight.insightId.value, imageUrl: owner.insight.images.first ?? "") { linkType in
                     owner.openKakaoLink(kakaoLinkType: linkType)
                 }
             })
@@ -257,7 +244,7 @@ final class InsightDetailViewController: BaseViewController {
             .subscribe(with: self, onNext: { owner, index in
                 owner.headerView.selectedIndex.accept(index)
                 owner.categoryTapView.selectedIndex.accept(index)
-                if owner.insight.memberId == UserdefaultKey.memberId {
+                if owner.insight.memberId.value == UserdefaultKey.memberId {
                     owner.tableView.scrollToRow(at: IndexPath(row: 0, section: index + 2), at: .top, animated: true)
                 }
             })
@@ -278,19 +265,6 @@ final class InsightDetailViewController: BaseViewController {
         
         tableView.setContentOffset(offset, animated: true)
     }
-
-    private func loadData() {
-        insightDetailViewModel.loadMyInsights()
-            .subscribe(with: self, onNext: { owner, result in
-                owner.myInsights = result
-            })
-            .disposed(by: disposeBag)
-        
-        couponService.getCoupons()
-            .subscribe { result in
-                self.coupon = result
-            }.disposed(by: self.disposeBag)
-    }
 }
 
 extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegate {
@@ -309,7 +283,7 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailImageCell.self)
-            cell.config(url: insight.mainImage, mainImage: mainImage)
+            cell.config(url: insight.images, mainImage: images)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailTitleTableCell.self)
@@ -318,19 +292,14 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
             
             cell.likeButton.rx.tap
                 .subscribe(with: self) { owner, _ in
-                    owner.insightDetailViewModel.recommendInsight(insightId: owner.insight.insightId)
+                    owner.insightDetailViewModel.recommendInsight(insightId: owner.insight.insightId.value)
                         .subscribe(with: self) { owner, result in
                             switch result {
                             case .success:
                                 cell.likeInsight()
-                                owner.insight.recommended = true
                                 owner.analyticsService.insightLike(isOn: true)
                             case .failure:
-                                if owner.insight.recommended {
-                                    owner.showAlert(text: "이미 추천한 인사이트입니다", type: .confirmOnly)
-                                } else {
-                                    owner.showAlert(text: "인사이트 추천은 교환 후 가능해요", type: .confirmOnly)
-                                }
+                                return
                             }
                         }
                         .disposed(by: owner.disposeBag)
@@ -340,7 +309,7 @@ extension InsightDetailViewController: UITableViewDataSource, UITableViewDelegat
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(forIndexPath: indexPath, cellType: InsightDetailDefaultInfoTableCell.self)
-            cell.config(info: insight, state: exchangeState, isMyInsight: insight.memberId == UserdefaultKey.memberId)
+            cell.config(info: insight, isMyInsight: insight.memberId.value == UserdefaultKey.memberId)
             cell.selectionStyle = .none
             return cell
         case 3:

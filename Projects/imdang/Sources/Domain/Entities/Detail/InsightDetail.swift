@@ -7,20 +7,6 @@
 
 import UIKit
 
-enum DetailExchangeState: String, Codable {
-    case pending = "PENDING"
-    case rejected = "REJECTED"
-    case accepted = "ACCEPTED"
-    case null = "NULL"
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let value = try? container.decode(String.self)
-
-        self = DetailExchangeState(rawValue: value ?? "NULL") ?? .null
-    }
-}
-
 struct Address: Codable {
     var siDo: String
     var siGunGu: String
@@ -40,11 +26,14 @@ struct Address: Codable {
     }
 }
 
+struct MemberId: Codable {
+    var value: String
+}
+
 struct InsightDetail: Codable {
-    var memberId: String = UserdefaultKey.memberId
+    var memberId: MemberId = MemberId(value: UserdefaultKey.memberId)
     var memberNickname: String
-    var score: Int
-    var mainImage: String
+    var images: [String]
     var title: String
     var address: Address
     var apartmentComplex: InsightDTO.ApartmentComplex
@@ -53,17 +42,14 @@ struct InsightDetail: Codable {
     var visitMethods: [String]
     var summary: String
     var access: String
+    var createdByMe: Bool
     
     var infra: Infrastructure
     var complexEnvironment: Environment
-//    var complexFacility: Facility
-//    var favorableNews: FavorableNews
-    
-    var exchangeRequestStatus: DetailExchangeState = .null
     var exchangeRequestId: String? = ""
     var recommended: Bool
     var exchangeRequestCreatedByMe: Bool? = nil
-    var insightId: String
+    var insightId: InsightId
     var accused: Bool
     var accusedCount: Int
     var createdAt: String
@@ -72,10 +58,9 @@ struct InsightDetail: Codable {
     
     static var emptyInsight: InsightDetail {
         return InsightDetail(
-            memberId: UserdefaultKey.memberId,
+            memberId: MemberId(value: UserdefaultKey.memberId),
             memberNickname: "",
-            score: 0,
-            mainImage: "",
+            images: [""],
             title: "",
             address: Address(siDo: "", siGunGu: "", eupMyeonDong: "", buildingNumber: "", latitude: 0, longitude: 0),
             apartmentComplex: InsightDTO.ApartmentComplex(name: ""),
@@ -84,13 +69,13 @@ struct InsightDetail: Codable {
             visitMethods: [],
             summary: "",
             access: "",
-            infra: Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], landmarks: [], unpleasantFacilities: [], text: ""),
-            complexEnvironment: Environment(buildingCondition: [], security: [], childrenFacility: [], seniorFacility: [], text: ""),
-            exchangeRequestStatus: .null,
+            createdByMe: true,
+            infra: Infrastructure(transportations: [], schoolDistricts: [], amenities: [], facilities: [], surroundings: [], text: ""),
+            complexEnvironment: Environment(buildingCondition: [], security: [], childrenFacility: [], text: ""),
             exchangeRequestId: nil,
             recommended: false,
             exchangeRequestCreatedByMe: nil,
-            insightId: "",
+            insightId: InsightId(value: ""),
             accused: false,
             accusedCount: 0,
             createdAt: "",
@@ -103,7 +88,7 @@ struct InsightDetail: Codable {
 extension InsightDetail {
     func toDTO() -> InsightDTO {
         return InsightDTO(
-            score: self.score,
+            memberId: self.memberId.value,
             title: self.title,
             address: InsightDTO.Address(
                 siDo: self.address.siDo,

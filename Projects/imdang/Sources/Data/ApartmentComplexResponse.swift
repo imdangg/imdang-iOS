@@ -8,5 +8,10 @@
 import Foundation
 
 struct ApartmentComplexResponse: Codable {
+    let data: [ApartName]
+    let error: ImdangError?
+}
+
+struct ApartName: Codable {
     var name: String
 }

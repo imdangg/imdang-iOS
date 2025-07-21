@@ -23,6 +23,7 @@ class SearchingViewController: UIViewController {
     private let todayInsights = BehaviorRelay<[Insight]>(value: [])
     private let topInsights = BehaviorRelay<[Insight]>(value: [])
     private let currentPage = PublishSubject<Int>()
+    private let refreshControl = UIRefreshControl()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
         $0.backgroundColor = .white
         $0.register(cell: InsightCollectionCell.self)
@@ -43,14 +44,13 @@ class SearchingViewController: UIViewController {
         super.viewDidLoad()
         
         setupCollectionView()
+        setupRefreshControl()
         bindActions()
+        loadInsightData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        selectedIndex = 0
-        loadInsightData()
         analyticsService.screenEvent(ScreenName: .homeSearch)
     }
     
@@ -72,9 +72,6 @@ class SearchingViewController: UIViewController {
             .subscribe(with: self, onNext: { owner, data in
                 if data.isEmpty { return }
                 owner.apartmentComplexes = data
-                
-                owner.collectionView.reloadSections([1])
-                
                 owner.fetchMyVisitedInsight(aptName: data[0])
             })
             .disposed(by: disposeBag)
@@ -110,7 +107,7 @@ class SearchingViewController: UIViewController {
         view.addSubview(searchBoxView)
         
         searchBoxView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(24)
+            $0.top.equalToSuperview().offset(8)
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(50)
         }
@@ -119,6 +116,22 @@ class SearchingViewController: UIViewController {
             $0.top.equalTo(searchBoxView.snp.bottom).offset(16)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-20)
+        }
+    }
+    
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
+    }
+    
+    @objc private func handleRefresh() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.selectedIndex = 0
+            self.loadInsightData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.refreshControl.endRefreshing()
+            }
         }
     }
     

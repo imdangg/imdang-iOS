@@ -13,8 +13,6 @@ import Then
 import ReactorKit
 
 class InsightViewController: BaseViewController, View {
-
-    private let buttonTitles = ["기본 정보", "인프라", "단지 환경", "단지 시설", "호재"]
     private var selectedIndex = 0
     var disposeBag = DisposeBag()
 
