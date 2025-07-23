@@ -29,13 +29,13 @@ class StorageBoxContainerViewController: UIViewController {
         super.viewDidLoad()
         
         addSubviews()
+        setView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         serverService.checkTokenExpired()
-        setView()
     }
     
     private func addSubviews() {

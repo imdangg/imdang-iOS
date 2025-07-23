@@ -15,6 +15,7 @@ final class StorageBoxViewController: BaseViewController {
     private var pageIndex = 0
     private var toggleState = false
     private var refreshable: Bool = true
+    private let refreshControl = UIRefreshControl()
     private var disposeBag = DisposeBag()
     private var currentaddress: AddressData?
     private var selectedComplex = BehaviorRelay<String?>(value: nil)
@@ -61,6 +62,7 @@ final class StorageBoxViewController: BaseViewController {
         super.viewDidLoad()
         setNavigationItem()
         configureCollectionView()
+        setupRefreshControl()
         bindActions()
     }
     
@@ -106,6 +108,29 @@ final class StorageBoxViewController: BaseViewController {
         collectionView.snp.makeConstraints {
             $0.topEqualToNavigationBottom(vc: self)
             $0.horizontalEdges.bottom.equalToSuperview()
+        }
+    }
+    
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
+    }
+    
+    @objc private func handleRefresh() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.storageBoxViewModel.loadMyDistricts()
+                .subscribe(with: self) { _, data in
+                    if let data = data, !data.isEmpty {
+                        self.config(addresses: data)
+                    } else {
+                        self.view.isHidden = true
+                    }
+                }
+                .disposed(by: self.disposeBag)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.refreshControl.endRefreshing()
+            }
         }
     }
     
