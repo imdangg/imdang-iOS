@@ -19,7 +19,6 @@ final class InsightDetailViewController: BaseViewController {
     private var showEditButton: Bool
     private var disposeBag = DisposeBag()
     private var myInsights: [Insight]?
-    private var coupon: CouponsResponse?
     private let analyticsService = AnalyticsService.shared
     private let kakaoShareService = KakaoShareService()
     private let insightDetailViewModel = InsightDetailViewModel()
