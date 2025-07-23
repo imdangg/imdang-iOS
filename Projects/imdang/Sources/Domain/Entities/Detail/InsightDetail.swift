@@ -88,7 +88,6 @@ struct InsightDetail: Codable {
 extension InsightDetail {
     func toDTO() -> InsightDTO {
         return InsightDTO(
-            memberId: self.memberId.value,
             title: self.title,
             address: InsightDTO.Address(
                 siDo: self.address.siDo,
