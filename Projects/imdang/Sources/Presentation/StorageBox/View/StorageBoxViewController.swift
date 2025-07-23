@@ -351,7 +351,6 @@ extension StorageBoxViewController: UICollectionViewDataSource, UICollectionView
             
             selectedComplex
                 .compactMap { $0 }
-                .distinctUntilChanged()
                 .subscribe(with: self) { _, complex in
                     print("selected complex: \(complex)")
                     cell.updateLabel(complex: complex)
@@ -360,7 +359,6 @@ extension StorageBoxViewController: UICollectionViewDataSource, UICollectionView
             
             modalVC.selectedComplex
                 .compactMap { $0 }
-                .distinctUntilChanged()
                 .subscribe(with: self) { owner, complex in
                     guard let currentaddress = owner.currentaddress else { return }
                     owner.selectedComplex.accept(complex)
