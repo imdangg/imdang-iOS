@@ -13,9 +13,9 @@ class MyPageService {
     private let networkManager = NetworkManager()
     static let shared = MyPageService()
     
-    func fetchMyPageInfo() -> Observable<MyPageResponse> {
+    func fetchMyPageInfo() -> Observable<MeDetail> {
         
-        let endpoint = Endpoint<MyPageResponse>(
+        let endpoint = Endpoint<MeResponse>(
             baseURL: .imdangAPI,
             path: "/members/me",
             method: .get,
@@ -24,7 +24,7 @@ class MyPageService {
 
         return networkManager.request(with: endpoint)
             .map { response in
-                return response
+                return response.data
             }
             .catch { error in
                 print("MyPage request failed with error: \(error)")

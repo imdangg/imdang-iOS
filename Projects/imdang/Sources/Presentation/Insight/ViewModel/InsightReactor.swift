@@ -15,7 +15,7 @@ class InsightReactor: Reactor {
     let insightService = InsightWriteService()
     
     var detail = InsightDetail.emptyInsight
-    var mainImage: [UIImage] = []
+    var images: [UIImage] = []
     var updateInsightId: String?
     
     struct State {
@@ -69,7 +69,7 @@ class InsightReactor: Reactor {
             var data = detail.toDTO()
             data.insightId = updateInsightId
             
-            return insightService.createInsight(dto: data, images: mainImage)
+            return insightService.createInsight(dto: data, images: images)
                 .map { success in
                     print("Upload success state updated: \(success)")
                     self.detail.memberNickname = UserdefaultKey.memberNickname
@@ -102,7 +102,7 @@ class InsightReactor: Reactor {
             
         case .updateBaseInfo(let info, let image):
             detail = info
-            mainImage = image
+            images = image
             
             newState.setCurrentCategory = 1
             

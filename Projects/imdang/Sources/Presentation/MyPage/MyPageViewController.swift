@@ -13,7 +13,7 @@ import ReactorKit
 
 final class MyPageViewController: BaseViewController, View {
 
-    private var info: MyPageResponse?
+    private var info: MeDetail?
     
     var disposeBag = DisposeBag()
     

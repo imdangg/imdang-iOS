@@ -24,7 +24,7 @@ final class HomeViewModel {
         
         networkManager.request(with: endpoint)
             .subscribe { result in
-                UserdefaultKey.memberNickname = result.nickname
+                UserdefaultKey.memberNickname = result.nickname ?? ""
             }
             .disposed(by: disposeBag)
     }

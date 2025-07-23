@@ -78,7 +78,7 @@ final class InsightDetailImageCell: UITableViewCell {
             images = image
             imageCount = image.count
         } else {
-            imageUrlStrings = url + url + url
+            imageUrlStrings = url
             imageCount = imageUrlStrings.count
         }
         pageControl.numberOfPages = imageCount

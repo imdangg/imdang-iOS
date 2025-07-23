@@ -15,7 +15,7 @@ final class MyPageReactor: Reactor {
     private let aple = AppleLoginService.shared
     
     struct State {
-        var myPageInfo: MyPageResponse?
+        var myPageInfo: MeDetail?
         var isLogout: Bool = false
     }
     
@@ -25,7 +25,7 @@ final class MyPageReactor: Reactor {
     }
     
     enum Mutation {
-        case setInfo(MyPageResponse)
+        case setInfo(MeDetail)
         case setLogoutSuccess(Bool)
     }
     

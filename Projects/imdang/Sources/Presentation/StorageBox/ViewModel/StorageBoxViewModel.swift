@@ -10,11 +10,6 @@ import NetworkKit
 import Alamofire
 import RxSwift
 
-struct AptComplexByDistrict: Codable {
-    let apartmentComplexName: String
-    let insightCount: Int
-}
-
 final class StorageBoxViewModel {
     var totalCount = 0
     var totalPage = 0
@@ -30,7 +25,7 @@ final class StorageBoxViewModel {
             "eupMyeonDong": address.eupMyeonDong
         ]
         
-        let endpoint = Endpoint<[AptComplexByDistrict]>(
+        let endpoint = Endpoint<AptComplexByDistrictResponse>(
             baseURL: .imdangAPI,
             path: "/insights/bookmarked/apartment-complexes",
             method: .get,
@@ -39,8 +34,8 @@ final class StorageBoxViewModel {
         )
         
         return networkManager.requestOptional(with: endpoint)
-            .map { data in
-                return data
+            .map { result in
+                return result?.data
             }
             .catch { error in
                 print("Error: \(error.localizedDescription)")
@@ -93,10 +88,10 @@ final class StorageBoxViewModel {
         )
         
         return networkManager.request(with: endpoint)
-            .map { data in
-                self.totalCount = data.totalElements
-                self.totalPage = data.totalPages
-                return data.toEntitiy()
+            .map { result in
+                self.totalCount = result.data.totalElements
+                self.totalPage = result.data.totalPages
+                return result.toEntitiy()
             }
             .catch { error in
                 print("Error: \(error.localizedDescription)")

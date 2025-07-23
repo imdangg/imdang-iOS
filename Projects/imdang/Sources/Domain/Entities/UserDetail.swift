@@ -13,7 +13,7 @@ struct MeResponse: Codable {
 }
 
 struct MeDetail: Codable {
-    let nickname: String
+    let nickname: String?
     private let rawInsightCount: String?
 
     var insightCount: Int {

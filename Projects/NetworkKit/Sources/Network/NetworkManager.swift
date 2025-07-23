@@ -100,6 +100,7 @@ public final class NetworkManager: Network {
             print("""
             📱 MultipartFormData LOG
             📱 Json: \(endpoint.jsonData.toPrettyPrintedString ?? "")
+            📱 images: \(endpoint.images.count)개            
             """)
             
             let request = self.session.upload(multipartFormData: { multipartFormData in
