@@ -21,6 +21,8 @@ extension UIColor {
     static let grayScale50 = UIColor(hexCode: "#F2F2F2")
     static let grayScale25 = UIColor(hexCode: "#FBFBFB") // Background
     
+    static let newLightGrayScale = UIColor(hexCode: "868686")
+    
     // MARK: - Orange
     static let mainOrange900 = UIColor(hexCode: "#331500")
     static let mainOrange800 = UIColor(hexCode: "#662A00")
