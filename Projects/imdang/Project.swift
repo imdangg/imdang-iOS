@@ -99,6 +99,7 @@ let project = Project(
                 .external(name: "FirebaseAnalytics"),
                 .external(name: "NMapsMap"),
                 .external(name: "SkeletonView"),
+                .external(name: "Lottie"),
                 .project(target: "NetworkKit", path: "../NetworkKit"),
                 .target(name: "SharedLibraries")
             ],
