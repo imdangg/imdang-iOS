@@ -90,6 +90,40 @@ public final class NetworkManager: Network {
         }
     }
     
+    public func requestInsightDetail<E: Requestable>(with endpoint: E) -> Observable<E.Response?> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else {
+                observer.onError(NSError(domain: "Network Error", code: -1, userInfo: nil))
+                return Disposables.create()
+            }
+            
+            let request = self.session.request(endpoint.makeURL(),
+                                               method: endpoint.method,
+                                               parameters: endpoint.parameters,
+                                               encoding: endpoint.encoding,
+                                               headers: endpoint.headers)
+                .validate()
+                .responseDecodable(of: E.Response.self) { response in
+                    switch response.result {
+                    case .success(let data):
+                        observer.onNext(data)
+                        observer.onCompleted()
+                    case .failure(let error):
+                        if response.response?.statusCode ==  400 {
+                            observer.onNext(nil)
+                            observer.onCompleted()
+                        } else {
+                            observer.onError(error)
+                        }
+                    }
+                }
+            
+            return Disposables.create {
+                request.cancel()
+            }
+        }
+    }
+    
     public func upload<E: MultipartRequestable>(with endpoint: E) -> Observable<Bool> {
         return Observable.create { [weak self] observer in
             guard let self = self else {

@@ -161,9 +161,13 @@ final class SearchingViewModel {
             parameters: parameters
         )
         
-        return networkManager.request(with: endpoint)
+        return networkManager.requestInsightDetail(with: endpoint)
             .map { data in
-                return data.toDetail()
+                if let data = data {
+                    return data.toDetail()
+                } else {
+                    return nil
+                }
             }
             .catch { error in
                 print("Error: \(error.localizedDescription)")

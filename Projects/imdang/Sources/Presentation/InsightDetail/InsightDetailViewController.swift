@@ -167,17 +167,6 @@ final class InsightDetailViewController: BaseViewController {
         }
     }
     
-    private func reloadInsight() {
-        insightDetailViewModel.loadInsightDetail(id: self.insight.insightId.value)
-            .subscribe { [self] data in
-                if let data = data {
-                    self.insight = data
-                    self.tableView.reloadData()
-                }
-            }
-            .disposed(by: disposeBag)
-    }
-    
     private func bindActions() {
         
         editButton.rx.tap

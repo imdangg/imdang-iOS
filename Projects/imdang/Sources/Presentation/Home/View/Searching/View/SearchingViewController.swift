@@ -315,6 +315,8 @@ extension SearchingViewController: UICollectionViewDataSource, UICollectionViewD
                             let vc = InsightDetailViewController(insight: data)
                             vc.hidesBottomBarWhenPushed = true
                             navigationController?.pushViewController(vc, animated: true)
+                        } else {
+                            self.showAlert(text: "인사이트를 1개 이상\n작성하셔야 볼 수 있습니다.", confirmButtonTitle: "작성 하러가기", type: .confirmOnly)
                         }
                     }
                     .disposed(by: disposeBag)
