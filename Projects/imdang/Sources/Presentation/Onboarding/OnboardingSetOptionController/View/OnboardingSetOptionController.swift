@@ -30,6 +30,7 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
         super.init(nibName: nil, bundle: nil)
         self.reactor = reactor
     }
+    
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     override func viewDidLoad() {
@@ -47,16 +48,22 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
         priorityView.isHidden = true
         doneView.isHidden = true
         
-        [startView, stepView, priorityView, spotSelectionView, doneView].forEach { view in
+        [startView, stepView, priorityView, spotSelectionView].forEach { view in
             view.snp.makeConstraints {
-                $0.edges.equalToSuperview()
+                $0.topEqualToNavigationBottom(vc: self).offset(10)
+                $0.leading.trailing.bottom.equalToSuperview()
             }
+        }
+        
+        doneView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
     private func configNavigationBarItem() {
         customBackButton.isHidden = true
         leftNaviItemView.addSubview(backButton)
+        navigationViewBottomShadow.backgroundColor = .clear
         backButton.snp.makeConstraints {
             $0.height.equalTo(20)
             $0.centerY.equalToSuperview()
@@ -76,22 +83,43 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        stepView.optionSelected.map { OnboardingSetOptionReactor.Action.optionSelected }.bind(to: reactor.action).disposed(by: disposeBag)
-        priorityView.nextButtonTapped.map{ OnboardingSetOptionReactor.Action.completeNewView }.bind(to: reactor.action).disposed(by: disposeBag)
-        priorityView.skipButtonTapped.map{ OnboardingSetOptionReactor.Action.skipNewView }.bind(to: reactor.action).disposed(by: disposeBag)
+        stepView.optionSelected.map { OnboardingSetOptionReactor.Action.optionSelected}
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        priorityView.nextButtonTapped.map{ OnboardingSetOptionReactor.Action.completeNewView }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        priorityView.skipButtonTapped.map{ OnboardingSetOptionReactor.Action.skipNewView }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         spotSelectionView.nextButtonTapped
-                    .map { OnboardingSetOptionReactor.Action.spotSelected($0) }
-                    .bind(to: reactor.action)
-                    .disposed(by: disposeBag)
+            .map { OnboardingSetOptionReactor.Action.spotSelected($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         spotSelectionView.skipButtonTapped
-                    .map { OnboardingSetOptionReactor.Action.skipSpotSelection }
-                    .bind(to: reactor.action)
-                    .disposed(by: disposeBag)
+            .map { OnboardingSetOptionReactor.Action.skipSpotSelection }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         backButton.rx.tap.map { OnboardingSetOptionReactor.Action.goBack }.bind(to: reactor.action).disposed(by: disposeBag)
         
         priorityView.priorityButtonTapped
             .subscribe(onNext: { [weak self] tag in
                 self?.presentSelectionModal(for: tag)
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.currentPage == .done }
+            .distinctUntilChanged()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isDonePage in
+                self?.leftNaviItemView.isHidden = isDonePage
+                self?.rightNaviItemView.isHidden = isDonePage
+                self?.navigationViewBottomShadow.isHidden = isDonePage
             })
             .disposed(by: disposeBag)
         
@@ -121,7 +149,7 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
                        }
                    }).disposed(by: disposeBag)
             
-        reactor.state.map { $0.currentPage == .start }.distinctUntilChanged()
+        reactor.state.map { $0.currentPage == .start || $0.currentPage == .done }.distinctUntilChanged()
             .bind(to: backButton.rx.isHidden)
             .disposed(by: disposeBag)
             
@@ -140,11 +168,6 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
                 }
             })
             .disposed(by: disposeBag)
-    }
-
-    
-    func didSelect(priority: Int, category: String, item: String) {
-        reactor?.action.onNext(.prioritySelected(priority: priority, category: category, item: item))
     }
 
     private func presentSelectionModal(for priority: Int) {
@@ -166,5 +189,9 @@ final class OnboardingSetOptionController: BaseViewController, View, SelectionDe
         }
         
         self.present(modalVC, animated: true, completion: nil)
+    }
+    
+    func didSelect(priority: Int, category: String, item: String) {
+        reactor?.action.onNext(.prioritySelected(priority: priority, category: category, item: item))
     }
 }

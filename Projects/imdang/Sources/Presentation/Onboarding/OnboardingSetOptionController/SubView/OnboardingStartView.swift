@@ -109,7 +109,7 @@ final class OnboardingStartView: UIView {
         [startViewTitle, buttonStackView, nextButton].forEach { addSubview($0) }
         
         startViewTitle.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(150)
+            $0.top.equalToSuperview().inset(28)
             $0.leading.equalToSuperview().inset(20)
         }
         

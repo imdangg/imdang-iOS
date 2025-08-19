@@ -43,7 +43,7 @@ final class SpotSelectionHeaderView: UICollectionReusableView {
         [titleLabel, subtitleLabel, spotTitle, divider].forEach { addSubview($0) }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(40)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         
@@ -89,7 +89,7 @@ final class SpotSelectionView: UIView {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 10
-        layout.headerReferenceSize = CGSize(width: self.frame.width, height: 181)
+        layout.headerReferenceSize = CGSize(width: self.frame.width, height: 140)
        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .white
@@ -114,9 +114,8 @@ final class SpotSelectionView: UIView {
     private let skipButton = UIButton(type: .system).then {
         $0.setTitle("건너뛰기", for: .normal)
         let attributes: [NSAttributedString.Key: Any] = [
-            .underlineStyle: NSUnderlineStyle.single.rawValue,
             .font: UIFont.pretenSemiBold(16),
-            .foregroundColor: UIColor.grayScale500
+            .foregroundColor: UIColor.grayScale600
         ]
         let attributedTitle = NSAttributedString(string: "건너뛰기", attributes: attributes)
         $0.setAttributedTitle(attributedTitle, for: .normal)
@@ -155,7 +154,7 @@ final class SpotSelectionView: UIView {
         collectionView.snp.makeConstraints {
             $0.top.equalTo(self.safeAreaLayoutGuide).offset(1)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(nextButton.snp.top).offset(-20)
+            $0.bottom.equalTo(nextButton.snp.top)
         }
     }
     

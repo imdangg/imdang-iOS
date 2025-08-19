@@ -13,6 +13,7 @@ import RxCocoa
 
 
 final class PrioritySettingView: UIView {
+    
     let priorityButtonTapped = PublishRelay<Int>()
     let nextButtonTapped = PublishRelay<Void>()
     let skipButtonTapped = PublishRelay<Void>()
@@ -30,7 +31,7 @@ final class PrioritySettingView: UIView {
         $0.font = .pretenMedium(18)
         $0.textColor = .grayScale500
     }
-    
+
     private let priorityStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 24
@@ -202,3 +203,4 @@ final class PrioritySelectionView: UIView {
         selectionButton.configuration = config
     }
 }
+

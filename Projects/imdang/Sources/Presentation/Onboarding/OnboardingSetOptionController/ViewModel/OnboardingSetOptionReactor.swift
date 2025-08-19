@@ -34,6 +34,7 @@ final class OnboardingSetOptionReactor: Reactor {
         case setSelectedPriority(priority: Int, category: String, item: String)
         case setSelectedSpots([String])
         case setOnboardingData(OnboardingType)
+        case resetSelections
     }
     
     struct State {
@@ -100,7 +101,14 @@ final class OnboardingSetOptionReactor: Reactor {
             case .start:
                 return .empty()
             case .step:
-                return currentState.currentStep > 0 ? .just(.goPreviousStep) : .just(.setCurrentPage(.start))
+                if currentState.currentStep > 0 {
+                    return .just(.goPreviousStep)
+                } else {
+                    return .concat([
+                        .just(.resetSelections),
+                        .just(.setCurrentPage(.start))
+                    ])
+                }
             case .priority:
                 return .just(.setCurrentPage(.step))
             case .spot:
@@ -152,7 +160,11 @@ final class OnboardingSetOptionReactor: Reactor {
             newState.stepData = newSteps.first ?? StepData(title: "오류", subTitle: "", options: [])
             
         case let .setSelectedSpots(spots):
-              newState.selectedSpots = spots
+            newState.selectedSpots = spots
+            
+        case .resetSelections:
+            newState.selectedPriorities = [:]
+            newState.selectedSpots = []
         }
         return newState
     }

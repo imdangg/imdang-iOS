@@ -20,6 +20,7 @@ final class SelectionModalController: UIViewController {
     
     private let priority: Int
     private let existingSelections: [Int: (String, String)]
+    
     let onboardingType: OnboardingType
     
     private var categories: [String] {
@@ -30,7 +31,9 @@ final class SelectionModalController: UIViewController {
             return ["아파트 평수", "세대수", "유형", "출퇴근 지역", "인프라", "환경", "교통", "학군"]
         }
     }
+    
     private var spot: [String] = ["종로구", "서대문구", "중구", "마포구", "용산구", "양천구", "성동구", "강서구", "광진구", "구로구", "동대문구", "금천구", "중랑구", "영등포구", "성북구", "동작구", "강북구", "관악구", "도봉구", "서초구", "노원구", "강남구", "은평구", "송파구", "강동구"]
+    
     private var items: [String: [String]] {
         switch onboardingType {
         case .liveIn:
@@ -341,3 +344,5 @@ extension SelectionModalController: UICollectionViewDataSource, UICollectionView
         updateSelectButtonState()
     }
 }
+
+
