@@ -17,9 +17,12 @@ extension UIColor {
     static let grayScale400 = UIColor(hexCode: "#A7A7A7")
     static let grayScale300 = UIColor(hexCode: "#BABABA")
     static let grayScale200 = UIColor(hexCode: "#CFCFCF")
+    static let grayScale120 = UIColor(hexCode: "#E8E8E8") // 피그마에 미정의상태. 임의로 선언
     static let grayScale100 = UIColor(hexCode: "#E6E6E6")
     static let grayScale50 = UIColor(hexCode: "#F2F2F2")
     static let grayScale25 = UIColor(hexCode: "#FBFBFB") // Background
+    
+    static let newLightGrayScale = UIColor(hexCode: "868686")
     
     // MARK: - Orange
     static let mainOrange900 = UIColor(hexCode: "#331500")
